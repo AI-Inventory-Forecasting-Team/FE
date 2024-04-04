@@ -215,186 +215,8 @@
                         <h2>Our Services</h2>
                     </div>
 
-                    <div class="row gy-4">
-                        <div
-                            class="col-lg-4 col-md-6"
-                            data-aos="fade-up"
-                            data-aos-delay="100"
-                        >
-                            <div class="card">
-                                <div class="card-img">
-                                    <img
-                                        src="assets/img/storage-service.jpg"
-                                        alt=""
-                                        class="img-fluid"
-                                    />
-                                </div>
-                                <h3>
-                                    <a
-                                        href="service-details.html"
-                                        class="stretched-link"
-                                        >Storage</a
-                                    >
-                                </h3>
-                                <p>
-                                    Cumque eos in qui numquam. Aut aspernatur
-                                    perferendis sed atque quia voluptas quisquam
-                                    repellendus temporibus itaqueofficiis odit
-                                </p>
-                            </div>
-                        </div>
-                        <!-- End Card Item -->
-
-                        <div
-                            class="col-lg-4 col-md-6"
-                            data-aos="fade-up"
-                            data-aos-delay="200"
-                        >
-                            <div class="card">
-                                <div class="card-img">
-                                    <img
-                                        src="assets/img/logistics-service.jpg"
-                                        alt=""
-                                        class="img-fluid"
-                                    />
-                                </div>
-                                <h3>
-                                    <a
-                                        href="service-details.html"
-                                        class="stretched-link"
-                                        >Logistics</a
-                                    >
-                                </h3>
-                                <p>
-                                    Asperiores provident dolor accusamus
-                                    pariatur dolore nam id audantium ut et iure
-                                    incidunt molestiae dolor ipsam ducimus
-                                    occaecati nisi
-                                </p>
-                            </div>
-                        </div>
-                        <!-- End Card Item -->
-
-                        <div
-                            class="col-lg-4 col-md-6"
-                            data-aos="fade-up"
-                            data-aos-delay="300"
-                        >
-                            <div class="card">
-                                <div class="card-img">
-                                    <img
-                                        src="assets/img/cargo-service.jpg"
-                                        alt=""
-                                        class="img-fluid"
-                                    />
-                                </div>
-                                <h3>
-                                    <a
-                                        href="service-details.html"
-                                        class="stretched-link"
-                                        >Cargo</a
-                                    >
-                                </h3>
-                                <p>
-                                    Dicta quam similique quia architecto eos
-                                    nisi aut ratione aut ipsum reiciendis sit
-                                    doloremque oluptatem aut et molestiae ut et
-                                    nihil
-                                </p>
-                            </div>
-                        </div>
-                        <!-- End Card Item -->
-
-                        <div
-                            class="col-lg-4 col-md-6"
-                            data-aos="fade-up"
-                            data-aos-delay="400"
-                        >
-                            <div class="card">
-                                <div class="card-img">
-                                    <img
-                                        src="assets/img/trucking-service.jpg"
-                                        alt=""
-                                        class="img-fluid"
-                                    />
-                                </div>
-                                <h3>
-                                    <a
-                                        href="service-details.html"
-                                        class="stretched-link"
-                                        >Trucking</a
-                                    >
-                                </h3>
-                                <p>
-                                    Dicta quam similique quia architecto eos
-                                    nisi aut ratione aut ipsum reiciendis sit
-                                    doloremque oluptatem aut et molestiae ut et
-                                    nihil
-                                </p>
-                            </div>
-                        </div>
-                        <!-- End Card Item -->
-
-                        <div
-                            class="col-lg-4 col-md-6"
-                            data-aos="fade-up"
-                            data-aos-delay="500"
-                        >
-                            <div class="card">
-                                <div class="card-img">
-                                    <img
-                                        src="assets/img/packaging-service.jpg"
-                                        alt=""
-                                        class="img-fluid"
-                                    />
-                                </div>
-                                <h3>
-                                    <a
-                                        href="service-details.html"
-                                        class="stretched-link"
-                                        >Packaging</a
-                                    >
-                                </h3>
-                                <p>
-                                    Illo consequuntur quisquam delectus
-                                    praesentium modi dignissimos facere vel cum
-                                    onsequuntur maiores beatae consequatur magni
-                                    voluptates
-                                </p>
-                            </div>
-                        </div>
-                        <!-- End Card Item -->
-
-                        <div
-                            class="col-lg-4 col-md-6"
-                            data-aos="fade-up"
-                            data-aos-delay="600"
-                        >
-                            <div class="card">
-                                <div class="card-img">
-                                    <img
-                                        src="assets/img/warehousing-service.jpg"
-                                        alt=""
-                                        class="img-fluid"
-                                    />
-                                </div>
-                                <h3>
-                                    <a
-                                        href="service-details.html"
-                                        class="stretched-link"
-                                        >Warehousing</a
-                                    >
-                                </h3>
-                                <p>
-                                    Quas assumenda non occaecati molestiae. In
-                                    aut earum sed natus eatae in vero. Ab modi
-                                    quisquam aut nostrum unde et qui est non quo
-                                    nulla
-                                </p>
-                            </div>
-                        </div>
-                        <!-- End Card Item -->
-                    </div>
+                    <div class="row gy-4"></div>
+                    <!-- End Card Item -->
                 </div>
             </section>
             <!-- End Services Section -->
@@ -1106,6 +928,58 @@
                 if (logoutBtnEl) {
                     logoutBtnEl.style.display = 'none';
                 }
+            }
+            // 포스트 리스트 가져오기 함수
+            function fetchPosts() {
+                fetch('http://127.0.0.1:8000/api/posts/list/', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            'access'
+                        )}`,
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                        const postsContainer =
+                            document.querySelector('.row.gy-4');
+                        data.forEach((post) => {
+                            // const dummyImageUrl =
+                            //     'assets/img/storage-service.jpg';
+                            const dummyImageUrl =
+                                'https://picsum.photos/800/600';
+                            const imageUrl = post.image || dummyImageUrl;
+                            const postElement = `
+                        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card">
+                                <div class="card-img">
+                                    <img src="${imageUrl}" alt="" class="img-fluid"/>
+                                </div>
+                                <h3>
+                                    <a href="service-details.html?postId=${
+                                        post.id
+                                    }" class="stretched-link">${
+                                post.title || '제목 없음'
+                            }</a>
+                                </h3>
+                                <p>${post.author_username}</p>
+                            </div>
+                        </div>
+                    `;
+                            postsContainer.innerHTML += postElement;
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching posts:', error);
+                        // 오류 발생 시 로그인 페이지로 리다이렉트할 수도 있습니다.
+                    });
+            }
+
+            // 로그인 상태 확인 후 포스트 리스트 가져오기 또는 로그인 페이지로 리다이렉트
+            if (isAuthenticated) {
+                fetchPosts(); // 로그인 되어 있으면 포스트 리스트 가져옴
+            } else {
+                window.location.href = 'login.html'; // 로그인 되어 있지 않으면 로그인 페이지로 리다이렉트
             }
         });
     </script>
