@@ -106,25 +106,8 @@
               <li><a href="about.html">About</a></li>
               <li><a href="services.html">Services</a></li>
               <li><a href="pricing.html">Pricing</a></li>
-              <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                <ul>
-                  <li><a href="#">Drop Down 1</a></li>
-                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                    <ul>
-                      <li><a href="#">Deep Drop Down 1</a></li>
-                      <li><a href="#">Deep Drop Down 2</a></li>
-                      <li><a href="#">Deep Drop Down 3</a></li>
-                      <li><a href="#">Deep Drop Down 4</a></li>
-                      <li><a href="#">Deep Drop Down 5</a></li>
-                    </ul>
-                  </li>
-                  <li><a href="#">Drop Down 2</a></li>
-                  <li><a href="#">Drop Down 3</a></li>
-                  <li><a href="#">Drop Down 4</a></li>
-                </ul>
-              </li>
               <li><a href="contact.html">Contact</a></li>
-              <li><a class="get-a-quote" href="#">Login</a></li>
+              <li><a href="#" class="LoginBtn">Login</a></li>
             </ul>
           </nav><!-- .navbar -->
     
@@ -179,8 +162,8 @@
                           </div>
                         </div>
                         <div class="d-grid gap-2">
-                          <input type="submit" class="btn btn-primary" value="로그인">
-                          <!-- <input type="submit" class="btn btn-primary" value="회원가입"> -->
+                          <input type="submit" class="btn btn-primary" value="로그인" id="Login">
+                          <input type="submit" class="btn btn-primary" value="회원가입" id="Register">
                         </div>
                       </form>
                     </div>
@@ -297,9 +280,10 @@
         const loginField = document.querySelector('.login-field');
         const id = document.querySelector('input[name="id"]');
         const pw = document.querySelector('input[name="pw"]');
-        const submit = document.querySelector('input[type="submit"]');
+        const login = document.querySelector('#Login');
+        const register = document.querySelector('#Register');
 
-        submit.addEventListener('click', (e) => {
+        login.addEventListener('click', (e) => {
             e.preventDefault();
             const username = id.value;
             const password = pw.value;
@@ -339,6 +323,10 @@
             console.log(err);
             alert('로그인을 실패했습니다. 다시 시도해주세요.');
             });
+        });
+        register.addEventListener('click', (e) => {
+        e.preventDefault();
+        location.href = 'register.html';
         });
     </script>
 </body>

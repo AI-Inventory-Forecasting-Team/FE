@@ -77,9 +77,10 @@
                         <li><a href="contact.html">Contact</a></li>
                         <li><span class="user-name"></span></li>
                         <li>
-                            <a class="LoginBtn" href="#">Login</a>
+                            <a href="#" class="LoginBtn">Login</a>
                         </li>
                         <li><a href="#" id="userNameDisplay"></a></li>
+                        <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
                 <!-- .navbar -->
@@ -1326,6 +1327,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const access = localStorage.getItem('access');
             const loginBtnEl = document.querySelector('.LoginBtn');
+            const logoutBtnEl = document.querySelector('.LogoutBtn');
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
             const isAuthenticated = !!access;
@@ -1373,12 +1375,29 @@
                     .catch((error) => {
                         console.error('Error refreshing token:', error);
                     });
+                if (logoutBtnEl) {
+                    logoutBtnEl.style.display = 'block';
+                    logoutBtnEl.addEventListener('click', () => {
+                        // 로컬 스토리지에서 인증 토큰 삭제
+                        localStorage.removeItem('access');
+                        localStorage.removeItem('refresh');
+                        // index.html로 리다이렉트
+                        location.href = 'index.html';
+                    });
+                }
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
                     loginBtnEl.style.display = 'block';
+                    // 로그인 버튼에 이벤트 리스너 추가
+                    loginBtnEl.addEventListener('click', () => {
+                        // login.html로 리다이렉트
+                        location.href = 'login.html';
+                    });
                 }
-                location.href = 'login.html';
+                if (logoutBtnEl) {
+                    logoutBtnEl.style.display = 'none';
+                }
             }
         });
     </script>
