@@ -415,6 +415,7 @@
                 const postId = getPostIdFromUrl();
                 if (postId) {
                     fetchPostDetails(postId);
+                    fetchComments(postId);
                 } else {
                     // postId가 없는 경우의 처리를 해야 합니다. 예: 메인 페이지로 리다이렉트
                     alert('게시물이 없습니다');
@@ -501,7 +502,8 @@
                         createComment(postId, commentContent);
                         commentTextareaEl.value = ''; // 댓글 작성 후 textarea 초기화
                     } else {
-                        alert('로그인이 필요합니다.');
+                        alert('게시물이 없습니다');
+                        location.href = 'index.html';
                     }
                 });
             } else {
