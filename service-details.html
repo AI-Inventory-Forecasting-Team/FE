@@ -162,7 +162,7 @@
                             <h3 class="mt-4">제목</h3>
                             <p id="view-count">조회수</p>
                             <p id="content">본문</p>
-                            <div class="my-4">
+                            <div class="my-5">
                                 <form id="commentForm">
                                     <div class="form-group">
                                         <textarea
@@ -181,7 +181,7 @@
                                     </button>
                                 </form>
                             </div>
-                            <div id="commentsList">댓글리스트</div>
+                            <div id="commentsList" class="mt-5">댓글리스트</div>
                         </div>
                     </div>
                 </div>
@@ -418,8 +418,8 @@
                     fetchComments(postId);
                 } else {
                     // postId가 없는 경우의 처리를 해야 합니다. 예: 메인 페이지로 리다이렉트
-                    alert('게시물이 없습니다');
-                    location.href = 'index.html';
+                    alert('유효한 접근이 아닙니다');
+                    location.href = 'services.html';
                 }
                 // 댓글 작성 함수
                 function createComment(postId, content) {
@@ -502,8 +502,8 @@
                         createComment(postId, commentContent);
                         commentTextareaEl.value = ''; // 댓글 작성 후 textarea 초기화
                     } else {
-                        alert('게시물이 없습니다');
-                        location.href = 'index.html';
+                        alert('내용을 입력해주세요');
+                        location.href = 'service-details.html';
                     }
                 });
             } else {
