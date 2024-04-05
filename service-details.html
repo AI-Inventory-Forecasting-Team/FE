@@ -163,7 +163,7 @@
                             <p id="view-count">조회수</p>
                             <p id="content">본문</p>
                             <div class="my-4">
-                                <form>
+                                <form id="commentForm">
                                     <div class="form-group">
                                         <textarea
                                             class="form-control"
@@ -181,6 +181,7 @@
                                     </button>
                                 </form>
                             </div>
+                            <div id="commentsList">댓글리스트</div>
                         </div>
                     </div>
                 </div>
@@ -303,6 +304,8 @@
             const logoutBtnEl = document.querySelector('.LogoutBtn');
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
+            const commentFormEl = document.getElementById('commentForm');
+            const commentTextareaEl = document.getElementById('comment');
             const isAuthenticated = !!access;
             document.querySelector('.col-lg-8 img').style.width = '800px';
             document.querySelector('.col-lg-8 img').style.height = '600px';
@@ -388,6 +391,8 @@
                             );
                             // 오류 발생 시 적절한 처리를 해야 합니다. 예: 사용자에게 오류 메시지를 보여주기
                         });
+                    // const postId = post.id;
+                    // fetchComments(postId); // 게시물 댓글 목록 가져오기
                 }
 
                 // 가져온 게시물의 세부 정보를 페이지에 채우는 함수
@@ -415,6 +420,90 @@
                     alert('게시물이 없습니다');
                     location.href = 'index.html';
                 }
+                // 댓글 작성 함수
+                function createComment(postId, content) {
+                    const requestBody = {
+                        post: postId,
+                        content: content,
+                    };
+
+                    fetch(
+                        `http://127.0.0.1:8000/api/posts/${postId}/comments/create/`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${localStorage.getItem(
+                                    'access'
+                                )}`,
+                            },
+                            body: JSON.stringify(requestBody),
+                        }
+                    )
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log('댓글 작성 성공:', data);
+                            fetchComments(postId); // 댓글 목록 새로고침
+                        })
+                        .catch((error) => {
+                            console.error('댓글 작성 실패:', error);
+                            // 오류 처리 코드를 추가해야 합니다.
+                        });
+                }
+                // 댓글 조회 함수
+                function fetchComments(postId) {
+                    fetch(
+                        `http://127.0.0.1:8000/api/posts/${postId}/comments/`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem(
+                                    'access'
+                                )}`,
+                            },
+                        }
+                    )
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const commentsListEl =
+                                document.getElementById('commentsList');
+                            commentsListEl.innerHTML = ''; // 기존 댓글 목록 초기화
+
+                            data.forEach((comment) => {
+                                const commentEl = document.createElement('div');
+                                const defaultAvatarUrl =
+                                    'https://picsum.photos/50/50'; // 대체 이미지 URL 예시
+                                const avatarUrl =
+                                    comment.get_avatar_url || defaultAvatarUrl;
+                                commentEl.innerHTML = `
+                                <div>
+                                <img src="${avatarUrl}" alt="Avatar" class="rounded-circle" width="50" height="50">
+                                <strong>${comment.author_username}</strong>
+                                <span>${new Date(
+                                    comment.created_at
+                                ).toLocaleString()}</span>
+                                <p>${comment.content}</p>
+                              </div>
+                              `;
+                                commentsListEl.appendChild(commentEl);
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('댓글 조회 실패:', error);
+                        });
+                }
+                // 댓글 작성 폼 제출 이벤트 리스너
+                commentFormEl.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const postId = getPostIdFromUrl();
+                    const commentContent = commentTextareaEl.value.trim();
+
+                    if (isAuthenticated && postId && commentContent) {
+                        createComment(postId, commentContent);
+                        commentTextareaEl.value = ''; // 댓글 작성 후 textarea 초기화
+                    } else {
+                        alert('로그인이 필요합니다.');
+                    }
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
