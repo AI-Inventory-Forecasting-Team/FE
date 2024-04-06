@@ -213,6 +213,9 @@
                     <div class="section-header">
                         <span>Our Services</span>
                         <h2>Our Services</h2>
+                        <a href="#" class="btn btn-primary" id="createPostBtn"
+                            >Create Post</a
+                        >
                     </div>
 
                     <div class="row gy-4" id="post"></div>
@@ -860,6 +863,7 @@
             const logoutBtnEl = document.querySelector('.LogoutBtn');
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
+            const createPostBtnEl = document.querySelector('#createPostBtn');
             const isAuthenticated = !!access;
 
             if (isAuthenticated) {
@@ -915,6 +919,12 @@
                         location.href = 'index.html';
                     });
                 }
+                if (createPostBtnEl) {
+                    createPostBtnEl.addEventListener('click', () => {
+                        // post-creation.html로 이동
+                        location.href = 'post-creation.html';
+                    });
+                }
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
@@ -927,6 +937,9 @@
                 }
                 if (logoutBtnEl) {
                     logoutBtnEl.style.display = 'none';
+                }
+                if (createPostBtnEl) {
+                    createPostBtnEl.style.display = 'none'; // 버튼 숨기기
                 }
             }
             // 포스트 리스트 가져오기 함수
