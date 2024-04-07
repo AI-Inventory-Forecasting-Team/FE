@@ -166,6 +166,12 @@
                             >
                                 삭제
                             </button>
+                            <button
+                                class="btn btn-primary float-end me-1"
+                                id="edit-post-btn"
+                            >
+                                수정
+                            </button>
                             <p id="view-count">조회수</p>
 
                             <p id="content">본문</p>
@@ -552,6 +558,14 @@
                             alert('유효한 접근이 아닙니다');
                             location.href = 'services.html';
                         }
+                    });
+                }
+                const editPostBtn = document.getElementById('edit-post-btn');
+                if (editPostBtn) {
+                    editPostBtn.addEventListener('click', () => {
+                        // 수정 모달 창 열기 또는 수정 폼 렌더링 등의 로직 추가
+                        alert('수정 기능은 준비 중입니다.');
+                        location.href = `post-update.html?postId=${postId}`;
                     });
                 }
             } else {
