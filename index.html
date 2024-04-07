@@ -46,6 +46,60 @@
         <!-- Template Main CSS File -->
         <link href="assets/css/main.css" rel="stylesheet" />
 
+        <style>
+            .message {
+                border-top: 1px solid #ccc;
+                padding: 10px;
+                margin-top: 5px;
+                background-color: #e6e6e6;
+            }
+            #chat-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 300px;
+                height: 500px;
+                background-color: white;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+            }
+            #chat-messages {
+                flex: 1;
+                overflow-y: auto;
+                padding: 10px;
+                display: flex;
+                flex-direction: column-reverse;
+                background-color: #f8f9fa;
+            }
+            #user-input {
+                display: flex;
+                padding: 10px;
+                background-color: #f8f9fa;
+                border-top: 1px solid #dee2e6;
+            }
+            #user-input input {
+                flex: 1;
+                padding: 10px;
+                outline: none;
+                border: none;
+                border-radius: 20px;
+                background-color: #e9ecef;
+            }
+            #user-input button {
+                margin-left: 10px;
+                border: none;
+                background-color: #1e88e5;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 20px;
+                cursor: pointer;
+            }
+        </style>
+
         <!-- =======================================================
   * Template Name: Logis
   * Template URL: https://bootstrapmade.com/logis-bootstrap-logistics-website-template/
@@ -121,7 +175,6 @@
                                 Search
                             </button>
                         </form>
-
                         <div
                             class="row gy-4"
                             data-aos="fade-up"
@@ -1311,7 +1364,17 @@
         ></a>
 
         <div id="preloader"></div>
-
+        <div id="chat-container">
+            <div id="chat-messages"></div>
+            <div id="user-input">
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="메시지를 입력하세요..."
+                />
+                <button class="btn btn-primary">전송</button>
+            </div>
+        </div>
         <!-- Vendor JS Files -->
         <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
@@ -1322,6 +1385,7 @@
 
         <!-- Template Main JS File -->
         <script src="assets/js/main.js"></script>
+        <script src="assets/js/chatbot.js"></script>
     </body>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
