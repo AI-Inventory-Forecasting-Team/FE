@@ -444,6 +444,8 @@
                             post.title;
                         document.getElementById('InputContent').value =
                             post.content;
+                        document.getElementById('InputCategory').value =
+                            post.category.id;
                         // 이미지와 파일 필드도 채워주어야 할 경우 추가 로직 필요
                     }
 
@@ -452,10 +454,40 @@
                         fetchPostDetails(postId);
                     }
 
+                    // 카테고리 목록 가져오기
+                    fetch('http://127.0.0.1:8000/api/posts/categories/', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                                'access'
+                            )}`,
+                        },
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            const categories = data || [];
+                            console.log('카테고리데이터:', categories);
+                            const categorySelect =
+                                document.getElementById('InputCategory');
+                            categories.forEach((category) => {
+                                const option = document.createElement('option');
+                                option.value = category.id;
+                                option.text = category.name;
+                                categorySelect.add(option);
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching categories:', error);
+                        });
+
                     const postForm = document.getElementById('postForm');
 
                     postForm.addEventListener('submit', function (e) {
-                        e.preventDefault(); // 폼 기본 제출 막기
+                        e.preventDefault();
 
                         const postId = getPostIdFromUrl();
                         if (!postId) {
@@ -463,10 +495,12 @@
                             return;
                         }
 
-                        // FormData 객체를 사용하여 폼 데이터 수집
                         const formData = new FormData(postForm);
+                        const categorySelect =
+                            document.getElementById('InputCategory');
+                        const selectedCategoryId = categorySelect.value;
+                        formData.append('category', selectedCategoryId);
 
-                        // fetch API 사용하여 데이터 전송
                         fetch(
                             `http://127.0.0.1:8000/api/posts/${postId}/update/`,
                             {
@@ -481,13 +515,12 @@
                         )
                             .then((response) => {
                                 if (response.ok) {
-                                    return response.json(); // 서버로부터 반환된 JSON 응답을 파싱
+                                    return response.json();
                                 }
                                 throw new Error('Network response was not ok.');
                             })
                             .then((data) => {
-                                console.log(data); // 성공적으로 수정된 포스트의 데이터를 콘솔에 출력
-                                // 여기에 성공 처리 로직 추가 (예: 사용자에게 성공 메시지 표시)
+                                console.log(data);
                                 location.href = 'services.html';
                             })
                             .catch((error) => {
@@ -495,7 +528,6 @@
                                     'There has been a problem with your fetch operation:',
                                     error
                                 );
-                                // 여기에 실패 처리 로직 추가 (예: 사용자에게 오류 메시지 표시)
                             });
                     });
                 } else {
