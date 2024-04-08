@@ -159,7 +159,8 @@
 
                         <div class="col-lg-8">
                             <img />
-                            <h3 class="mt-4">제목</h3>
+                            <h4 class="mt-4" id="category">카테고리</h4>
+                            <h3 class="mt-4" id="title">제목</h3>
                             <button
                                 class="btn btn-danger float-end"
                                 id="delete-post-btn"
@@ -414,7 +415,9 @@
                     const postImage =
                         post.image || 'https://picsum.photos/800/600'; // 이미지가 없을 경우 더미 이미지 사용
                     document.querySelector('.col-lg-8 img').src = postImage;
-                    document.querySelector('.col-lg-8 h3').textContent =
+                    document.querySelector('#category').textContent =
+                        post.category_name || '카테고리 없음';
+                    document.querySelector('#title').textContent =
                         post.title || '제목 없음';
                     document.querySelector(
                         '#view-count'
