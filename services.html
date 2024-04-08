@@ -956,11 +956,11 @@
                         console.log(data);
                         const postsContainer = document.querySelector('#post');
                         data.forEach((post) => {
-                            // const dummyImageUrl =
-                            //     'assets/img/storage-service.jpg';
                             const dummyImageUrl =
                                 'https://picsum.photos/800/600';
                             const imageUrl = post.image || dummyImageUrl;
+                            const categoryName =
+                                post.category || '카테고리 없음';
                             const postElement = `
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                             <div class="card">
@@ -975,6 +975,7 @@
                             }</a>
                                 </h3>
                                 <p>${post.author_username}</p>
+                                <p>${categoryName}</p>
                             </div>
                         </div>
                     `;
