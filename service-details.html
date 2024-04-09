@@ -190,9 +190,9 @@
                                 <span id="like-count">0</span>
                                 <button
                                     class="btn btn-outline-success float-end"
-                                    id="scrap-btn"
+                                    id="bookmark-btn"
                                 >
-                                    스크랩
+                                    북마크
                                 </button>
                                 <button
                                     class="btn btn-outline-info float-end me-4"
@@ -350,6 +350,7 @@
             const commentTextareaEl = document.getElementById('comment');
             const likeBtn = document.getElementById('like-btn');
             const likeCount = document.getElementById('like-count');
+            const bookmarkBtn = document.getElementById('bookmark-btn');
             const isAuthenticated = !!access;
             document.querySelector('.col-lg-8 img').style.width = '800px';
             document.querySelector('.col-lg-8 img').style.height = '600px';
@@ -592,6 +593,90 @@
                             alert('공유할 포스트의 ID를 찾을 수 없습니다.');
                         }
                     });
+                let isBookmarked = false; // 북마크 상태를 저장할 변수
+                // 북마크 버튼 클릭 이벤트 리스너 추가
+                bookmarkBtn.addEventListener('click', () => {
+                    const postId = getPostIdFromUrl();
+                    if (postId) {
+                        if (isBookmarked) {
+                            // 북마크 해제
+                            unbookmarkPost(postId);
+                        } else {
+                            // 북마크
+                            bookmarkPost(postId);
+                        }
+                    } else {
+                        alert('유효한 접근이 아닙니다');
+                        location.href = 'services.html';
+                    }
+                });
+
+                // 게시물 북마크 함수
+                function bookmarkPost(postId) {
+                    const accessToken = localStorage.getItem('access');
+                    fetch(`http://127.0.0.1:8000/api/posts/bookmarks/create/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                        body: JSON.stringify({ post: postId }),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.id) {
+                                // 가정: 응답에서 북마크의 ID가 'id' 필드에 포함되어 있다고 가정
+                                localStorage.setItem('bookmarkId', data.id); // 북마크 ID를 로컬 스토리지에 저장
+                                isBookmarked = true;
+                                alert('북마크되었습니다.');
+                                updateBookmarkButton(true);
+                            } else {
+                                alert('북마크에 실패했습니다.');
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('북마크 중 오류 발생:', error);
+                        });
+                }
+
+                function unbookmarkPost() {
+                    const accessToken = localStorage.getItem('access');
+                    const bookmarkId = localStorage.getItem('bookmarkId'); // 로컬 스토리지에서 북마크 ID 가져오기
+
+                    fetch(
+                        `http://127.0.0.1:8000/api/posts/bookmarks/${bookmarkId}/`,
+                        {
+                            method: 'DELETE',
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        }
+                    )
+                        .then((response) => {
+                            if (response.ok) {
+                                localStorage.removeItem('bookmarkId'); // 북마크 해제 후 ID 삭제
+                                isBookmarked = false;
+                                alert('북마크가 해제되었습니다.');
+                                updateBookmarkButton(false);
+                            } else {
+                                alert('북마크 해제에 실패했습니다.');
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('북마크 해제 중 오류 발생:', error);
+                        });
+                }
+
+                function updateBookmarkButton(isBookmarked) {
+                    const bookmarkBtn = document.getElementById('bookmark-btn');
+                    if (isBookmarked) {
+                        bookmarkBtn.textContent = '북마크 해제';
+                        // 또는 아이콘 변경
+                    } else {
+                        bookmarkBtn.textContent = '북마크';
+                        // 또는 아이콘 변경
+                    }
+                }
 
                 // 댓글 작성 함수
                 function createComment(postId, content) {
