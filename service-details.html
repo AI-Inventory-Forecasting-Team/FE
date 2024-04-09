@@ -173,9 +173,36 @@
                             >
                                 수정
                             </button>
+                            <p id="author">작성자</p>
                             <p id="view-count">조회수</p>
 
                             <p id="content">본문</p>
+
+                            <!-- 좋아요, 스크랩, 공유 버튼 -->
+                            <div class="my-4">
+                                <button
+                                    class="btn btn-outline-primary me-2"
+                                    id="like-btn"
+                                    style="text-decoration: none"
+                                >
+                                    좋아요
+                                </button>
+                                <span id="like-count">0</span>
+                                <button
+                                    class="btn btn-outline-success float-end"
+                                    id="scrap-btn"
+                                >
+                                    스크랩
+                                </button>
+                                <button
+                                    class="btn btn-outline-info float-end me-4"
+                                    id="share-btn"
+                                >
+                                    공유
+                                </button>
+                            </div>
+
+                            <hr class="my-4" />
 
                             <div class="my-5">
                                 <form id="commentForm">
@@ -321,6 +348,8 @@
                 document.querySelector('#userNameDisplay');
             const commentFormEl = document.getElementById('commentForm');
             const commentTextareaEl = document.getElementById('comment');
+            const likeBtn = document.getElementById('like-btn');
+            const likeCount = document.getElementById('like-count');
             const isAuthenticated = !!access;
             document.querySelector('.col-lg-8 img').style.width = '800px';
             document.querySelector('.col-lg-8 img').style.height = '600px';
@@ -398,6 +427,8 @@
                         .then((response) => response.json())
                         .then((data) => {
                             fillPostDetails(data);
+                            updateLikeStatus(data.isLiked);
+                            updateLikeCount(data.likesCount);
                         })
                         .catch((error) => {
                             console.error(
@@ -419,6 +450,8 @@
                         post.category_name || '카테고리 없음';
                     document.querySelector('#title').textContent =
                         post.title || '제목 없음';
+                    document.querySelector('#author').textContent =
+                        post.author_username || '작성자 정보 없음';
                     document.querySelector(
                         '#view-count'
                     ).textContent = `조회수: ${
@@ -427,6 +460,15 @@
                     document.querySelector('#content').textContent =
                         post.content;
                     // 추가적인 내용 채우기 (예: 작성자, 좋아요 수 등)를 여기에 구현할 수 있습니다.
+                }
+
+                function updateLikeStatus(isLiked) {
+                    isLiked = isLiked; // 좋아요 상태 업데이트
+                }
+
+                function updateLikeCount(likeCount) {
+                    const likeCountEl = document.getElementById('like-count');
+                    likeCountEl.textContent = likeCount;
                 }
 
                 const postId = getPostIdFromUrl();
@@ -438,6 +480,94 @@
                     alert('유효한 접근이 아닙니다');
                     location.href = 'services.html';
                 }
+
+                // 좋아요 상태를 저장할 변수
+                let isLiked = false;
+
+                // 좋아요 버튼 클릭 이벤트 리스너
+                likeBtn.addEventListener('click', () => {
+                    const postId = getPostIdFromUrl();
+                    if (postId) {
+                        if (isLiked) {
+                            // 이미 좋아요 상태인 경우, 좋아요 취소
+                            unlikePost(postId);
+                        } else {
+                            // 좋아요 상태가 아닌 경우, 좋아요
+                            likePost(postId);
+                        }
+                    } else {
+                        alert('유효한 접근이 아닙니다');
+                        location.href = 'services.html';
+                    }
+                });
+
+                // 게시물 좋아요 함수
+                function likePost(postId) {
+                    fetch(`http://127.0.0.1:8000/api/posts/${postId}/like/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${localStorage.getItem(
+                                'access'
+                            )}`,
+                        },
+                        body: JSON.stringify({ post: postId }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            console.log('좋아요 처리 성공:', data);
+                            if (data.like_count === 0) {
+                                isLiked = false;
+                            } else {
+                                isLiked = true;
+                            }
+                            updateLikeCount(data.like_count);
+                        })
+                        .catch((error) => {
+                            console.error('좋아요 처리 실패:', error);
+                            // 오류 처리 코드를 추가해야 합니다.
+                        });
+                }
+
+                // 게시물 좋아요 취소 함수
+                function unlikePost(postId) {
+                    fetch(`http://127.0.0.1:8000/api/posts/${postId}/unlike/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${localStorage.getItem(
+                                'access'
+                            )}`,
+                        },
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            console.log('좋아요 취소 성공:', data);
+                            isLiked = false;
+                            updateLikeCount(data.like_count);
+                        })
+                        .catch((error) => {
+                            console.error('좋아요 취소 실패:', error);
+                            // 오류 처리 코드를 추가해야 합니다.
+                        });
+                }
+
+                // 좋아요 수 업데이트 함수
+                function updateLikeCount(likeCount) {
+                    const likeCountEl = document.getElementById('like-count');
+                    likeCountEl.textContent = likeCount;
+                }
+
                 // 댓글 작성 함수
                 function createComment(postId, content) {
                     const requestBody = {
