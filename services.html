@@ -76,9 +76,7 @@
                 <nav id="navbar" class="navbar">
                     <ul>
                         <li><a href="about.html">About</a></li>
-                        <li>
-                            <a href="services.html" class="active">Services</a>
-                        </li>
+                        <li><a href="services.html">Services</a></li>
                         <li><a href="pricing.html">Pricing</a></li>
                         <li><a href="contact.html">Contact</a></li>
                         <li><span class="user-name"></span></li>
@@ -86,6 +84,9 @@
                             <a href="#" class="LoginBtn">Login</a>
                         </li>
                         <li><a href="#" id="userNameDisplay"></a></li>
+                        <li>
+                            <a href="#" id="profileLink">Profile</a>
+                        </li>
                         <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
@@ -929,6 +930,10 @@
                         location.href = 'post-creation.html';
                     });
                 }
+                const profileLinkEl = document.getElementById('profileLink');
+                profileLinkEl.addEventListener('click', () => {
+                    location.href = 'profile.html';
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {

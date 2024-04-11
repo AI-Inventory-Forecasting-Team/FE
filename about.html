@@ -75,7 +75,7 @@
                 <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
                 <nav id="navbar" class="navbar">
                     <ul>
-                        <li><a href="about.html" class="active">About</a></li>
+                        <li><a href="about.html">About</a></li>
                         <li><a href="services.html">Services</a></li>
                         <li><a href="pricing.html">Pricing</a></li>
                         <li><a href="contact.html">Contact</a></li>
@@ -84,6 +84,9 @@
                             <a href="#" class="LoginBtn">Login</a>
                         </li>
                         <li><a href="#" id="userNameDisplay"></a></li>
+                        <li>
+                            <a href="#" id="profileLink">Profile</a>
+                        </li>
                         <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
@@ -869,6 +872,7 @@
             const logoutBtnEl = document.querySelector('.LogoutBtn');
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
+            const profileLinkEl = document.getElementById('profileLink');
             const isAuthenticated = !!access;
 
             if (isAuthenticated) {
@@ -924,6 +928,9 @@
                         location.href = 'index.html';
                     });
                 }
+                profileLinkEl.addEventListener('click', () => {
+                    location.href = 'profile.html';
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
@@ -936,6 +943,10 @@
                 }
                 if (logoutBtnEl) {
                     logoutBtnEl.style.display = 'none';
+                }
+
+                if (profileLinkEl) {
+                    profileLinkEl.style.display = 'none';
                 }
             }
         });
