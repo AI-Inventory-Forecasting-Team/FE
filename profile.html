@@ -175,7 +175,8 @@
                           <input type="password" class="form-control" id="InputPassword" name="password">
                         </div>
                         <!-- 수정 버튼 추가 -->
-                        <button type="submit" class="btn btn-primary">수정</button>
+                        <button type="submit" class="btn btn-danger float-end" id="deleteProfile">회원 탈퇴</button>
+                        <button type="button" class="btn btn-primary float-end me-2" id="updateProfile">수정</button>
                       </form>
                     </div>
                   </div>
@@ -301,6 +302,8 @@
             const lastNameInput = document.querySelector('#InputLastName');
             const emailInput = document.querySelector('#InputEmail');
             const passwordInput = document.querySelector('#InputPassword');
+            const updateProfileBtn = document.querySelector('#updateProfile');
+            const deleteProfileBtn = document.querySelector('#deleteProfile');
             const isAuthenticated = !!access;
 
             if (isAuthenticated) {
@@ -361,37 +364,60 @@
                         location.href = 'index.html';
                     });
                 }
-                // 프로필 업데이트 폼 제출 이벤트 핸들러
-                profileForm.addEventListener('submit', event => {
+                // 프로필 업데이트 버튼 제출 이벤트 핸들러
+                updateProfileBtn.addEventListener('click', function(event) {
                     event.preventDefault();
-            
+        
                     const formData = {
-                        username: usernameInput.value,
-                        email: emailInput.value,
-                        first_name: firstNameInput.value,
-                        last_name: lastNameInput.value,
-                        password: passwordInput.value,
+                        username: document.getElementById('InputUsername').value,
+                        email: document.getElementById('InputEmail').value,
+                        first_name: document.getElementById('InputFirstName').value,
+                        last_name: document.getElementById('InputLastName').value,
+                        password: document.getElementById('InputPassword').value,
                     };
-
+            
                     const accessToken = localStorage.getItem('access');
             
                     fetch('http://127.0.0.1:8000/api/accounts/profile/update/', {
                         method: 'PUT',
                         headers: {
-                                // 'Authorization' 헤더에 'Bearer ' 접두사와 함께 인증 토큰 포함
-                                'Content-Type': 'application/json', // Content-Type을 application/json으로 설정
-                                Authorization: `Bearer ${accessToken}`,
-                                },
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        },
                         body: JSON.stringify(formData)
                     })
                     .then(response => response.json())
                     .then(data => {
                         console.log('Profile updated:', data);
-                        // 성공 메시지 표시 또는 추가 작업 수행
+                        window.location.href = 'index.html';
                     })
                     .catch(error => console.error('Error:', error));
                 });
-
+                // 프로필 삭제 버튼 클릭 이벤트 핸들러
+                deleteProfileBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+            
+                    const accessToken = localStorage.getItem('access');
+            
+                    if (confirm('정말로 회원 탈퇴를 하시겠습니까?')) {
+                        fetch('http://127.0.0.1:8000/api/accounts/profile/delete/', {
+                            method: 'DELETE',
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log('Profile deleted');
+                                localStorage.removeItem('access'); // 인증 토큰 삭제
+                                window.location.href = 'login.html'; // 로그인 페이지로 이동
+                            } else {
+                                throw new Error('Failed to delete profile');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    }
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
