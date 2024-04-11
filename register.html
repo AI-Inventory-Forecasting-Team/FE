@@ -151,11 +151,21 @@
                           <label for="InputID" class="form-label">ID</label>
                           <input type="text" class="form-control" id="InputID" name="id">
                         </div>
+                           <!-- 이름과 성을 입력받는 추가 필드 -->
+                        <div class="mb-3">
+                          <label for="InputFirstName" class="form-label">First Name</label>
+                          <input type="text" class="form-control" id="InputFirstName" name="firstName" placeholder="First Name">
+                        </div>
+                        <div class="mb-3">
+                          <label for="InputLastName" class="form-label">Last Name</label>
+                          <input type="text" class="form-control" id="InputLastName" name="lastName" placeholder="Last Name">
+                        </div>
                         <div class="mb-3">
                           <label for="InputPW1" class="form-label">Password</label>
                           <input type="password" class="form-control" id="InputPW1" name="pw1">
                           <label for="InputPW2" class="form-label mt-1">Confirm password</label>
                           <input type="password" class="form-control" id="InputPW2" name="pw2">
+                     
                           <div class="d-flex justify-content-between">
                             <div class="form-check mt-2">
                               <input type="checkbox" class="form-check-input" id="Check1">
@@ -279,53 +289,54 @@
     
             <!-- Template Main JS File -->
             <script src="assets/js/main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const registerButton = document.querySelector('input[type="submit"]'); // 회원가입 버튼
-
-            registerButton.addEventListener('click', (e) => {
-                e.preventDefault(); // 폼의 기본 제출 동작 방지
-
-                const username = document.querySelector('input[name="id"]').value;
-                const password1 = document.querySelector('input[name="pw1"]').value;
-                const password2 = document.querySelector('input[name="pw2"]').value;
-
-                // 비밀번호 일치 여부 확인
-                if (password1 !== password2) {
-                    alert('비밀번호가 일치하지 않습니다.');
-                    return;
-                }
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const registerButton = document.querySelector('input[type="submit"]'); // 회원가입 버튼
             
-                // 회원가입 요청 보내기
-                fetch('http://127.0.0.1:8000/api/accounts/signup/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password1,
-                    }),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('회원가입에 실패했습니다.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data); // 성공적으로 회원가입이 완료되었다면 서버로부터의 응답을 콘솔에 출력
-                    alert('회원가입이 성공적으로 완료되었습니다.');
-                    // 회원가입 성공 후 로그인 페이지나 메인 페이지로 리다이렉션 할 수 있습니다.
-                    location.href = 'login.html'; // 예: 로그인 페이지로 이동
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert(error.message);
+                    registerButton.addEventListener('click', (e) => {
+                        e.preventDefault(); // 폼의 기본 제출 동작 방지
+            
+                        const username = document.querySelector('input[name="id"]').value;
+                        const password1 = document.querySelector('input[name="pw1"]').value;
+                        const password2 = document.querySelector('input[name="pw2"]').value;
+                        const firstName = document.querySelector('input[name="firstName"]').value;
+                        const lastName = document.querySelector('input[name="lastName"]').value;
+            
+                        // 비밀번호 일치 여부 확인
+                        if (password1 !== password2) {
+                            alert('비밀번호가 일치하지 않습니다.');
+                            return;
+                        }
+                        
+                        // 회원가입 요청 보내기
+                        fetch('http://127.0.0.1:8000/api/accounts/signup/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                password: password1,
+                                firstName: firstName,
+                                lastName: lastName,
+                            }),
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('회원가입에 실패했습니다.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data); // 성공적으로 회원가입이 완료되었다면 서버로부터의 응답을 콘솔에 출력
+                            alert('회원가입이 성공적으로 완료되었습니다.');
+                            // 회원가입 성공 후 로그인 페이지나 메인 페이지로 리다이렉션 할 수 있습니다.
+                            location.href = 'login.html'; // 예: 로그인 페이지로 이동
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert(error.message);
+                        });
+                    });
                 });
-            });
-        });
-
-    </script>
-</body>
-</html>
+            </script>
