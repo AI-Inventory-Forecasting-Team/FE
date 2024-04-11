@@ -76,9 +76,7 @@
                 <nav id="navbar" class="navbar">
                     <ul>
                         <li><a href="about.html">About</a></li>
-                        <li>
-                            <a href="services.html" class="active">Services</a>
-                        </li>
+                        <li><a href="services.html">Services</a></li>
                         <li><a href="pricing.html">Pricing</a></li>
                         <li><a href="contact.html">Contact</a></li>
                         <li><span class="user-name"></span></li>
@@ -86,6 +84,9 @@
                             <a href="#" class="LoginBtn">Login</a>
                         </li>
                         <li><a href="#" id="userNameDisplay"></a></li>
+                        <li>
+                            <a href="#" id="profileLink">Profile</a>
+                        </li>
                         <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
@@ -868,6 +869,7 @@
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
             const createPostBtnEl = document.querySelector('#createPostBtn');
+            const profileLinkEl = document.getElementById('profileLink');
             const isAuthenticated = !!access;
 
             if (isAuthenticated) {
@@ -929,6 +931,9 @@
                         location.href = 'post-creation.html';
                     });
                 }
+                profileLinkEl.addEventListener('click', () => {
+                    location.href = 'profile.html';
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
@@ -944,6 +949,9 @@
                 }
                 if (createPostBtnEl) {
                     createPostBtnEl.style.display = 'none'; // 버튼 숨기기
+                }
+                if (profileLinkEl) {
+                    profileLinkEl.style.display = 'none'; // 버튼 숨기기
                 }
             }
             // 포스트 리스트 가져오기 함수

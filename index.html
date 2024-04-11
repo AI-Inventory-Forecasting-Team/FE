@@ -137,7 +137,14 @@
                         <li>
                             <a href="#" class="LoginBtn">Login</a>
                         </li>
+
                         <li><a href="profile_update.html" id="userNameDisplay"></a></li>
+
+                        <li><a href="#" id="userNameDisplay"></a></li>
+                        <li>
+                            <a href="#" id="profileLink">Profile</a>
+                        </li>
+
                         <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
@@ -1403,6 +1410,7 @@
             const logoutBtnEl = document.querySelector('.LogoutBtn');
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
+            const profileLinkEl = document.getElementById('profileLink');
             const isAuthenticated = !!access;
 
             if (isAuthenticated) {
@@ -1467,7 +1475,7 @@
                         // 여기에서 직접 `localStorage`에서 `access` 토큰을 가져옵니다.
                         const accessToken = localStorage.getItem('access');
                         fetch(
-                            `http://localhost:8000/api/posts/list/?search=${searchQuery}`,
+                            `http://127.0.0.1:8000/api/posts/list/?search=${searchQuery}`,
                             {
                                 method: 'GET', // HTTP 요청 메소드
                                 headers: {
@@ -1488,6 +1496,9 @@
                             })
                             .catch((error) => console.error('Error:', error));
                     });
+                profileLinkEl.addEventListener('click', () => {
+                    location.href = 'profile.html';
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
@@ -1500,6 +1511,9 @@
                 }
                 if (logoutBtnEl) {
                     logoutBtnEl.style.display = 'none';
+                }
+                if (profileLinkEl) {
+                    profileLinkEl.style.display = 'none';
                 }
             }
         });

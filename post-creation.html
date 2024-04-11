@@ -100,6 +100,9 @@
                             <a href="#" class="LoginBtn">Login</a>
                         </li>
                         <li><a href="#" id="userNameDisplay"></a></li>
+                        <li>
+                            <a href="#" id="profileLink">Profile</a>
+                        </li>
                         <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
@@ -352,6 +355,7 @@
                 const userNameDisplayEl =
                     document.querySelector('#userNameDisplay');
                 const postForm = document.getElementById('postForm');
+                const profileLinkEl = document.getElementById('profileLink');
                 const isAuthenticated = !!access;
 
                 if (isAuthenticated) {
@@ -498,6 +502,9 @@
 
                             loadCategories();
                         });
+                    profileLinkEl.addEventListener('click', () => {
+                        location.href = 'profile.html';
+                    });
                 } else {
                     // 로그인 되어 있지 않은 경우
                     if (loginBtnEl) {
@@ -510,6 +517,9 @@
                     }
                     if (logoutBtnEl) {
                         logoutBtnEl.style.display = 'none';
+                    }
+                    if (userNameDisplayEl) {
+                        userNameDisplayEl.style.display = 'none';
                     }
                 }
             });

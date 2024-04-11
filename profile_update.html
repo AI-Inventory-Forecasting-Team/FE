@@ -1,211 +1,64 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  
-  <title>프로필 조회 및 편집</title>
-  <meta content="" name="description" />
-  <meta content="" name="keywords" />
-
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon" />
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-    rel="stylesheet" />
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-  <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet" />
-
-  <style>
-    .login-form-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .login-btn:hover,
-    .signup-btn:hover {
-      background-color: #87ceeb;
-      border-color: #87ceeb;
-    }
-    #findPW {
-      text-decoration: none;
-    }
-    .form-control:focus {
-      background-color: #ffffe0; /* 옅은 노란색 */
-      border-color: #ced4da;
-      box-shadow: none;
-    }
-    .form-control {
-      background-color: #ffffe0; /* 옅은 노란색 */
-      color: #495057;
-    }
-    .form-label {
-      color: #6c757d; /* 회색 */
-    }
-    .toggle-password {
-      cursor: pointer;
-      position: absolute;
-      right: 10px;
-      top: 10px;
-    }
-  </style>
-
-  <!-- =======================================================
-  * Template Name: Logis
-  * Template URL: https://bootstrapmade.com/logis-bootstrap-logistics-website-template/
-  * Updated: Mar 17 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Update</title>
 </head>
-
 <body>
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+    <h1>프로필 수정</h1>
+    <form id="profileForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required><br>
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password"><br>
+        <input type="submit" value="Update Profile">
+    </form>
 
-      <a href="index.html" class="logo d-flex align-items-center">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
-        <h1>Logis</h1>
-      </a>
-
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <!-- Added link to Profile section -->
-          <li><a href="#profile">Profile</a></li>
-        </ul>
-      </nav><!-- .navbar -->
-
-      <!-- Display user name if logged in -->
-      <div id="userProfile" class="d-flex align-items-center">
-        <span id="userNameDisplay"></span>
-      </div>
-
-    </div>
-  </header><!-- End Header -->
-
-  <main id="main">
-    <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs">
-      <div class="page-header d-flex align-items-center" style="background-image: url('assets/img/page-header.jpg');">
-        <div class="container position-relative">
-          <div class="row d-flex justify-content-center">
-            <div class="col-lg-6 text-center">
-              <h2>프로필 조회 및 편집</h2>
-              <p>회원님의 프로필 정보를 조회하고 편집할 수 있는 페이지입니다.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <nav>
-        <div class="container">
-          <ol>
-            <li><a href="index.html">Home</a></li>
-            <li>프로필 조회 및 편집</li>
-          </ol>
-        </div>
-      </nav>
-    </div><!-- End Breadcrumbs -->
-
-    <!-- ======= Profile Section ======= -->
-    <section id="profile" class="profile">
-      <div class="container mt-5">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="login-form-container">
-              <h2 class="mb-4">프로필 조회 및 편집</h2>
-              <form>
-                <div class="mb-3">
-                  <!-- Display user ID -->
-                  <label for="InputID" class="form-label">ID</label>
-                  <input type="text" class="form-control" id="InputID" name="id" value="사용자 ID" readonly>
-                </div>
-                <div class="mb-3">
-                  <label for="InputName" class="form-label">이름</label>
-                  <input type="text" class="form-control" id="InputName" name="name" placeholder="이름을 입력하세요">
-                </div>
-                <div class="mb-3">
-                  <label for="InputEmail" class="form-label">이메일 주소</label>
-                  <input type="email" class="form-control" id="InputEmail" name="email" placeholder="이메일 주소를 입력하세요">
-                </div>
-                <div class="mb-3">
-                  <label for="InputPassword" class="form-label">새로운 비밀번호</label>
-                  <input type="password" class="form-control" id="InputPassword" name="newPassword" placeholder="새로운 비밀번호를 입력하세요">
-                </div>
-                <div class="d-grid gap-2">
-                  <button type="submit" class="btn btn-primary">저장</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- End Profile Section -->
-  </main><!-- End #main -->
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const userNameDisplay = document.getElementById('userNameDisplay');
-
-      // 사용자가 로그인했을 때의 동작을 시뮬레이션하기 위한 예시
-      const loggedInUser = {
-        id: 'user123',
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-      };
-
-      // 로그인한 사용자 정보를 헤더에 표시
-      const displayUserProfile = (user) => {
-        userNameDisplay.innerHTML = `<a href="profile_update.html">${user.name}</a>`;
-      };
-
-      // 로그인 상태 체크 및 프로필 표시
-      const checkLoginStatus = () => {
-        // 예시로 로그인한 상태라고 가정
-        const isLoggedIn = true;
-
-        if (isLoggedIn) {
-          displayUserProfile(loggedInUser);
-        } else {
-          userNameDisplay.textContent = '로그인하세요';
-        }
-      };
-
-      // 초기 실행
-      checkLoginStatus();
-    });
-  </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileForm = document.getElementById('profileForm');
+            
+            profileForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const password = document.getElementById('password').value;
+                
+                // 프로필 업데이트 요청 보내기
+                fetch('http://127.0.0.1:8000/api/accounts/profile/update/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 여기에 토큰 등 인증 정보를 포함해야 함
+                    },
+                    body: JSON.stringify({
+                        firstName: firstName,
+                        lastName: lastName,
+                        password: password,
+                    }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('프로필 업데이트에 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    alert('프로필이 성공적으로 업데이트되었습니다.');
+                    // 업데이트 성공 후 메인 페이지로 이동 또는 다른 동작 수행
+                    location.href = 'main.html';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

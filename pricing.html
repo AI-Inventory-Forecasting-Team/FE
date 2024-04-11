@@ -3,8 +3,11 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-        
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="upgrade-insecure-requests"
+        />
+
         <title>Logis Bootstrap Template - Pricing</title>
         <meta content="" name="description" />
         <meta content="" name="keywords" />
@@ -74,16 +77,16 @@
                     <ul>
                         <li><a href="about.html">About</a></li>
                         <li><a href="services.html">Services</a></li>
-                        <li>
-                            <a href="pricing.html" class="active">Pricing</a>
-                        </li>
-                        </li>
+                        <li><a href="pricing.html">Pricing</a></li>
                         <li><a href="contact.html">Contact</a></li>
                         <li><span class="user-name"></span></li>
                         <li>
                             <a href="#" class="LoginBtn">Login</a>
                         </li>
                         <li><a href="#" id="userNameDisplay"></a></li>
+                        <li>
+                            <a href="#" id="profileLink">Profile</a>
+                        </li>
                         <li><a href="#" class="LogoutBtn">Logout</a></li>
                     </ul>
                 </nav>
@@ -496,12 +499,13 @@
         <script src="assets/js/main.js"></script>
     </body>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const access = localStorage.getItem('access');
             const loginBtnEl = document.querySelector('.LoginBtn');
             const logoutBtnEl = document.querySelector('.LogoutBtn');
             const userNameDisplayEl =
                 document.querySelector('#userNameDisplay');
+            const profileLinkEl = document.getElementById('profileLink');
             const isAuthenticated = !!access;
 
             if (isAuthenticated) {
@@ -557,6 +561,9 @@
                         location.href = 'index.html';
                     });
                 }
+                profileLinkEl.addEventListener('click', () => {
+                    location.href = 'profile.html';
+                });
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
@@ -569,6 +576,9 @@
                 }
                 if (logoutBtnEl) {
                     logoutBtnEl.style.display = 'none';
+                }
+                if (userNameDisplayEl) {
+                    userNameDisplayEl.style.display = 'none';
                 }
             }
         });
