@@ -731,13 +731,17 @@
                                 document.getElementById('commentsList');
                             commentsListEl.innerHTML = ''; // 기존 댓글 목록 초기화
 
-                            data.forEach((comment) => {
-                                const commentEl = document.createElement('div');
-                                const defaultAvatarUrl =
-                                    'https://picsum.photos/50/50'; // 대체 이미지 URL 예시
-                                const avatarUrl =
-                                    comment.get_avatar_url || defaultAvatarUrl;
-                                commentEl.innerHTML = `
+                            // data.results를 사용하여 댓글 배열에 접근
+                            if (data.results && Array.isArray(data.results)) {
+                                data.results.forEach((comment) => {
+                                    const commentEl =
+                                        document.createElement('div');
+                                    const defaultAvatarUrl =
+                                        'https://picsum.photos/50/50'; // 대체 이미지 URL 예시
+                                    const avatarUrl =
+                                        comment.get_avatar_url ||
+                                        defaultAvatarUrl;
+                                    commentEl.innerHTML = `
                                         <div>
                                         <img src="${avatarUrl}" alt="Avatar" class="rounded-circle" width="50" height="50">
                                         <strong>${
@@ -747,10 +751,16 @@
                                             comment.created_at
                                         ).toLocaleString()}</span>
                                         <p>${comment.content}</p>
-                                      </div>
-                                      `;
-                                commentsListEl.appendChild(commentEl);
-                            });
+                                    </div>
+                                    `;
+                                    commentsListEl.appendChild(commentEl);
+                                });
+                            } else {
+                                console.error(
+                                    '댓글 데이터가 배열 형태가 아닙니다:',
+                                    data
+                                );
+                            }
                         })
                         .catch((error) => {
                             console.error('댓글 조회 실패:', error);

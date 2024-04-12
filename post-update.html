@@ -477,7 +477,7 @@
                             return response.json();
                         })
                         .then((data) => {
-                            const categories = data || [];
+                            const categories = data.results || [];
                             console.log('카테고리데이터:', categories);
                             const categorySelect =
                                 document.getElementById('InputCategory');

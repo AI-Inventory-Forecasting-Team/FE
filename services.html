@@ -226,6 +226,12 @@
                     <div class="row gy-4" id="post"></div>
                     <!-- End Card Item -->
                 </div>
+                <nav aria-label="Page navigation example">
+                    <ul
+                        class="pagination justify-content-center mt-5"
+                        id="postPagination"
+                    ></ul>
+                </nav>
             </section>
             <!-- End Services Section -->
 
@@ -951,9 +957,14 @@
                     createPostBtnEl.style.display = 'none'; // 버튼 숨기기
                 }
             }
+
             // 포스트 리스트 가져오기 함수
-            function fetchPosts() {
-                fetch('http://127.0.0.1:8000/api/posts/list/', {
+            let currentPage = 1;
+            const postsPerPage = 9; // 한 페이지에 표시할 포스트 수
+
+            function fetchPosts(page = 1) {
+                currentPage = page;
+                fetch(`http://127.0.0.1:8000/api/posts/list/?page=${page}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem(
                             'access'
@@ -962,15 +973,17 @@
                 })
                     .then((response) => response.json())
                     .then((data) => {
-                        console.log(data);
                         const postsContainer = document.querySelector('#post');
-                        data.forEach((post) => {
-                            const dummyImageUrl =
-                                'https://picsum.photos/800/600';
-                            const imageUrl = post.image || dummyImageUrl;
-                            const categoryName =
-                                post.category_name || '카테고리 없음';
-                            const postElement = `
+                        postsContainer.innerHTML = ''; // 포스트 목록 초기화
+
+                        if (Array.isArray(data.results)) {
+                            data.results.forEach((post) => {
+                                const dummyImageUrl =
+                                    'https://picsum.photos/800/600';
+                                const imageUrl = post.image || dummyImageUrl;
+                                const categoryName =
+                                    post.category_name || '카테고리 없음';
+                                const postElement = `
                         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                             <div class="card">
                                 <div class="card-img">
@@ -980,22 +993,97 @@
                                     <a href="service-details.html?postId=${
                                         post.id
                                     }" class="stretched-link">${
-                                post.title || '제목 없음'
-                            }</a>
+                                    post.title || '제목 없음'
+                                }</a>
                                 </h3>
                                 <p>${post.author_username}</p>
                                 <p>${categoryName}</p>
                             </div>
                         </div>
                     `;
-                            postsContainer.innerHTML += postElement;
-                        });
+                                postsContainer.innerHTML += postElement;
+                            });
+
+                            renderPagination(
+                                data.count,
+                                data.next,
+                                data.previous
+                            );
+                        } else {
+                            console.error('Unexpected data format:', data);
+                        }
                     })
                     .catch((error) => {
                         console.error('Error fetching posts:', error);
-                        // 오류 발생 시 로그인 페이지로 리다이렉트할 수도 있습니다.
                     });
             }
+
+            function renderPagination(totalCount, nextUrl, prevUrl) {
+                const paginationContainer =
+                    document.querySelector('#postPagination');
+                paginationContainer.innerHTML = ''; // 페이지네이션 초기화
+
+                const totalPages = Math.ceil(totalCount / postsPerPage);
+
+                if (totalPages > 1) {
+                    const paginationList = document.createElement('ul');
+                    paginationList.classList.add('pagination');
+
+                    // 이전 버튼 렌더링
+                    if (prevUrl) {
+                        const prevLi = document.createElement('li');
+                        prevLi.classList.add('page-item');
+                        const prevLink = document.createElement('a');
+                        prevLink.classList.add('page-link');
+                        prevLink.setAttribute('href', '#');
+                        prevLink.textContent = '이전';
+                        prevLink.addEventListener('click', () =>
+                            fetchPosts(currentPage - 1)
+                        );
+                        prevLi.appendChild(prevLink);
+                        paginationList.appendChild(prevLi);
+                    }
+
+                    // 페이지 번호 렌더링
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageLi = document.createElement('li');
+                        pageLi.classList.add('page-item');
+                        if (i === currentPage) {
+                            pageLi.classList.add('active');
+                        }
+                        const pageLink = document.createElement('a');
+                        pageLink.classList.add('page-link');
+                        pageLink.setAttribute('href', '#');
+                        pageLink.textContent = i;
+                        pageLink.addEventListener('click', () => {
+                            currentPage = i;
+                            fetchPosts(i);
+                        });
+                        pageLi.appendChild(pageLink);
+                        paginationList.appendChild(pageLi);
+                    }
+
+                    // 다음 버튼 렌더링
+                    if (nextUrl) {
+                        const nextLi = document.createElement('li');
+                        nextLi.classList.add('page-item');
+                        const nextLink = document.createElement('a');
+                        nextLink.classList.add('page-link');
+                        nextLink.setAttribute('href', '#');
+                        nextLink.textContent = '다음';
+                        nextLink.addEventListener('click', () =>
+                            fetchPosts(currentPage + 1)
+                        );
+                        nextLi.appendChild(nextLink);
+                        paginationList.appendChild(nextLi);
+                    }
+
+                    paginationContainer.appendChild(paginationList);
+                }
+            }
+
+            // 초기 포스트 목록 로드
+            fetchPosts();
 
             // 로그인 상태 확인 후 포스트 리스트 가져오기 또는 로그인 페이지로 리다이렉트
             if (isAuthenticated) {

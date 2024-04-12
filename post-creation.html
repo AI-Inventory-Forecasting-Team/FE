@@ -437,7 +437,7 @@
 
                                     const categories = await response.json();
 
-                                    categories.forEach((category) => {
+                                    categories.results.forEach((category) => {
                                         const option =
                                             document.createElement('option');
                                         option.value = category.id;
