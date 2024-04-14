@@ -343,6 +343,9 @@
 
         <!-- Template Main JS File -->
         <script src="assets/js/main.js"></script>
+
+        <!-- DOMPurify -->
+        <script src="https://cdn.jsdelivr.net/npm/dompurify@2/dist/purify.min.js"></script>
     </body>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -460,8 +463,10 @@
                     ).textContent = `조회수: ${
                         post.view_count !== null ? post.view_count : '0'
                     }`;
-                    document.querySelector('#content').textContent =
-                        post.content;
+                    const contentElement = document.getElementById('content');
+                    const sanitizedContent = DOMPurify.sanitize(post.content);
+
+                    contentElement.innerHTML = sanitizedContent;
                 }
 
                 function updateLikeStatus(isLiked) {

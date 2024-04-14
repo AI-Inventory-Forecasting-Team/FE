@@ -67,6 +67,7 @@
                 resize: none;
             }
         </style>
+        <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 
         <!-- =======================================================
   * Template Name: Logis
@@ -458,7 +459,53 @@
                                 async function (e) {
                                     e.preventDefault();
 
+                                    // FormData 객체 생성
                                     const formData = new FormData(this);
+                                    const editorData =
+                                        CKEDITOR.instances.InputContent.getData();
+                                    formData.append('content', editorData);
+
+                                    // CSRF 토큰 가져오기
+                                    function getCookie(name) {
+                                        let cookieValue = null;
+                                        if (
+                                            document.cookie &&
+                                            document.cookie !== ''
+                                        ) {
+                                            const cookies =
+                                                document.cookie.split(';');
+                                            for (
+                                                let i = 0;
+                                                i < cookies.length;
+                                                i++
+                                            ) {
+                                                const cookie =
+                                                    cookies[i].trim();
+                                                if (
+                                                    cookie.substring(
+                                                        0,
+                                                        name.length + 1
+                                                    ) ===
+                                                    name + '='
+                                                ) {
+                                                    cookieValue =
+                                                        decodeURIComponent(
+                                                            cookie.substring(
+                                                                name.length + 1
+                                                            )
+                                                        );
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        return cookieValue;
+                                    }
+
+                                    const csrftoken = getCookie('csrftoken');
+                                    formData.append(
+                                        'csrfmiddlewaretoken',
+                                        csrftoken
+                                    );
 
                                     // FormData 내용 확인을 위한 로그 출력
                                     for (let [
@@ -523,6 +570,9 @@
                     }
                 }
             });
+        </script>
+        <script>
+            CKEDITOR.replace('InputContent');
         </script>
     </body>
 </html>

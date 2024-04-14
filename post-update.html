@@ -68,6 +68,8 @@
             }
         </style>
 
+        <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+
         <!-- =======================================================
   * Template Name: Logis
   * Template URL: https://bootstrapmade.com/logis-bootstrap-logistics-website-template/
@@ -348,6 +350,7 @@
         <!-- Template Main JS File -->
         <script src="assets/js/main.js"></script>
         <script>
+            CKEDITOR.replace('InputContent');
             document.addEventListener('DOMContentLoaded', () => {
                 const access = localStorage.getItem('access');
                 const loginBtnEl = document.querySelector('.LoginBtn');
@@ -450,10 +453,20 @@
                     function fillPostDetailsForm(post) {
                         document.getElementById('InputTitle').value =
                             post.title;
-                        document.getElementById('InputContent').value =
-                            post.content;
-                        document.getElementById('InputCategory').value =
-                            post.category.id;
+                        CKEDITOR.instances.InputContent.setData(post.content);
+                        // document.getElementById('InputCategory').value =
+                        //     post.category.id;
+                        if (post.category) {
+                            // post.category 객체가 존재하는지 확인
+                            document.getElementById('InputCategory').value =
+                                post.category.id;
+                        } else {
+                            // post.category가 null이거나 존재하지 않을 때의 처리
+                            // 예를 들어, 기본 값을 설정하거나, 사용자에게 카테고리가 없음을 알릴 수 있습니다.
+                            console.log(
+                                '이 게시물에는 카테고리가 지정되지 않았습니다.'
+                            );
+                        }
                         // 이미지와 파일 필드도 채워주어야 할 경우 추가 로직 필요
                     }
 
@@ -504,10 +517,37 @@
                         }
 
                         const formData = new FormData(postForm);
+                        const editorData =
+                            CKEDITOR.instances.InputContent.getData();
+                        formData.append('content', editorData);
                         const categorySelect =
                             document.getElementById('InputCategory');
                         const selectedCategoryId = categorySelect.value;
                         formData.append('category', selectedCategoryId);
+
+                        // CSRF 토큰 가져오기
+                        function getCookie(name) {
+                            let cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                                const cookies = document.cookie.split(';');
+                                for (let i = 0; i < cookies.length; i++) {
+                                    const cookie = cookies[i].trim();
+                                    if (
+                                        cookie.substring(0, name.length + 1) ===
+                                        name + '='
+                                    ) {
+                                        cookieValue = decodeURIComponent(
+                                            cookie.substring(name.length + 1)
+                                        );
+                                        break;
+                                    }
+                                }
+                            }
+                            return cookieValue;
+                        }
+
+                        const csrftoken = getCookie('csrftoken');
+                        formData.append('csrfmiddlewaretoken', csrftoken);
 
                         fetch(
                             `http://127.0.0.1:8000/api/posts/${postId}/update/`,
