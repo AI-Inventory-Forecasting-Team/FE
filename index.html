@@ -1396,14 +1396,14 @@
 
         <div id="preloader"></div>
         <div id="chat-container">
+            <div id="file-uploader">
+                <input type="file" id="fileUploader" accept=".xlsx, .xls"/>
+                <button onclick="loadExcel()">엑셀 파일 불러오기</button>
+            </div>
             <div id="chat-messages"></div>
             <div id="user-input">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="메시지를 입력하세요..."
-                />
-                <button class="btn btn-primary">전송</button>
+                <input type="text" placeholder="메시지를 입력하세요..." />
+                <button onclick="askQuestion()">전송</button>
             </div>
         </div>
         <!-- Vendor JS Files -->
@@ -1415,6 +1415,7 @@
         <script src="assets/vendor/php-email-form/validate.js"></script>
 
         <!-- Template Main JS File -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
         <script src="assets/js/main.js"></script>
         <script src="assets/js/chatbot.js"></script>
     </body>

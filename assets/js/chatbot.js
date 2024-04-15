@@ -1,75 +1,84 @@
-// 채팅 메시지를 표시할 DOM
-const chatMessages = document.querySelector('#chat-messages');
-// 사용자 입력 필드
-const userInput = document.querySelector('#user-input input');
-// 전송 버튼
-const sendButton = document.querySelector('#user-input button');
-// 발급받은 OpenAI API 키를 변수로 저장
-const apiKey = '여기에 입력';
-// OpenAI API 엔드포인트 주소를 변수로 저장
-const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
-function addMessage(sender, message) {
-    // 새로운 div 생성
-    const messageElement = document.createElement('div');
-    // 생성된 요소에 클래스 추가
-    messageElement.className = 'message';
-    // 채팅 메시지 목록에 새로운 메시지 추가
-    messageElement.textContent = `${sender}: ${message}`;
-    chatMessages.prepend(messageElement);
-}
-// ChatGPT API 요청
-async function fetchAIResponse(prompt) {
-    // API 요청에 사용할 옵션을 정의
-    const requestOptions = {
-        method: 'POST',
-        // API 요청의 헤더를 설정
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-            model: 'gpt-3.5-turbo', // 사용할 AI 모델
-            messages: [
-                {
-                    role: 'user', // 메시지 역할을 user로 설정
-                    content: prompt, // 사용자가 입력한 메시지
-                },
-            ],
-            temperature: 0.8, // 모델의 출력 다양성
-            max_tokens: 1024, // 응답받을 메시지 최대 토큰(단어) 수 설정
-            top_p: 1, // 토큰 샘플링 확률을 설정
-            frequency_penalty: 0.5, // 일반적으로 나오지 않는 단어를 억제하는 정도
-            presence_penalty: 0.5, // 동일한 단어나 구문이 반복되는 것을 억제하는 정도
-            stop: ['Human'], // 생성된 텍스트에서 종료 구문을 설정
-        }),
+let inventoryData = []; // 재고 데이터를 저장하는 배열
+
+function loadExcel() {
+    const fileUploader = document.getElementById('fileUploader');
+    const file = fileUploader.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        
+        // 첫 번째 시트의 데이터를 JSON 형식으로 변환
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        inventoryData = XLSX.utils.sheet_to_json(worksheet);
+        console.log(inventoryData); // 콘솔에서 데이터 확인
     };
-    // API 요청후 응답 처리
-    try {
-        const response = await fetch(apiEndpoint, requestOptions);
-        const data = await response.json();
-        const aiResponse = data.choices[0].message.content;
-        return aiResponse;
-    } catch (error) {
-        console.error('OpenAI API 호출 중 오류 발생:', error);
-        return 'OpenAI API 호출 중 오류 발생';
-    }
+    
+    reader.readAsArrayBuffer(file);
 }
-// 전송 버튼 클릭 이벤트 처리
-sendButton.addEventListener('click', async () => {
-    // 사용자가 입력한 메시지
-    const message = userInput.value.trim();
-    // 메시지가 비어있으면 리턴
-    if (message.length === 0) return;
-    // 사용자 메시지 화면에 추가
-    addMessage('나', message);
-    userInput.value = '';
-    //ChatGPT API 요청후 답변을 화면에 추가
-    const aiResponse = await fetchAIResponse(message);
-    addMessage('챗봇', aiResponse);
-});
-// 사용자 입력 필드에서 Enter 키 이벤트를 처리
-userInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        sendButton.click();
+
+function askQuestion() {
+    const userInput = document.querySelector('#user-input input').value.trim().toLowerCase(); // 대소문자 구분 없이 처리
+    let answer = ""; // 답변 초기화
+
+    if (userInput === "남은재고") {
+        // "남은재고" 입력 시 모든 재고 항목 나열
+        if (inventoryData.length === 0) {
+            answer = "로드된 재고 정보가 없습니다.";
+        } else {
+            // 모든 재고 항목 나열
+            inventoryData.forEach(item => {
+                answer += `${item.상품명}, ${item.재고}\n`;
+            });
+            answer = answer.trim(); // 마지막 줄바꿈 제거
+        }
+    } else {
+        // 다른 질문에 대한 처리
+        answer = "재고 정보를 찾을 수 없습니다.";
+        inventoryData.forEach(item => {
+            if (item.상품명 && item.상품명.includes(userInput)) {
+                answer = `${item.상품명}, ${item.재고}`;
+            }
+        });
+    }
+
+    // 사용자의 질문을 화면에 표시
+    addMessage(userInput, 'user');
+
+    // 챗봇의 답변을 화면에 표시
+    addMessage(answer, 'bot');
+
+    // 입력 필드 초기화
+    document.querySelector('#user-input input').value = '';
+}
+
+function addMessage(text, sender) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = text;
+    messageDiv.classList.add('message', sender);
+
+    // 채팅창의 맨 위에 메시지 추가
+    if (chatMessages.firstChild) {
+        chatMessages.insertBefore(messageDiv, chatMessages.firstChild);
+    } else {
+        chatMessages.appendChild(messageDiv); // 만약 첫 메시지인 경우 그냥 추가
+    }
+
+    // 채팅창을 맨 위로 스크롤하여 최신 메시지 표시
+    chatMessages.scrollTop = 0;
+}
+
+
+document.querySelector('#user-input button').addEventListener('click', askQuestion);
+// 엔터 키 입력 시에도 질문을 제출할 수 있게 추가
+document.querySelector('#user-input input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        askQuestion();
     }
 });
+
+
+

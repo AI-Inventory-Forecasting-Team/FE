@@ -8,7 +8,7 @@
             content="upgrade-insecure-requests"
         />
 
-        <title>OpenAI를 이용한 챗봇</title>
+        <title>재고 챗봇</title>
         <style>
             body {
                 display: flex;
@@ -57,12 +57,17 @@
     </head>
     <body>
         <div id="chat-container">
+            <div id="file-uploader">
+                <input type="file" id="fileUploader" accept=".xlsx, .xls"/>
+                <button onclick="loadExcel()">엑셀 파일 불러오기</button>
+            </div>
             <div id="chat-messages"></div>
             <div id="user-input">
                 <input type="text" placeholder="메시지를 입력하세요..." />
-                <button>전송</button>
+                <button onclick="askQuestion()">전송</button>
             </div>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
         <script src="assets/js/chatbot.js"></script>
     </body>
 </html>
