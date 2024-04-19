@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Post Update Form</title>
         <meta content="" name="description" />
@@ -363,7 +359,7 @@
 
                 if (isAuthenticated) {
                     // 토큰 갱신
-                    fetch('http://127.0.0.1:8000/api/token/refresh/', {
+                    fetch('http://43.203.201.118/api/token/refresh/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -379,7 +375,7 @@
 
                             // 사용자 이름 가져오기
                             fetch(
-                                'http://127.0.0.1:8000/api/accounts/profile/',
+                                'http://43.203.201.118/api/accounts/profile/',
                                 {
                                     headers: {
                                         Authorization: `Bearer ${newToken}`,
@@ -430,7 +426,7 @@
 
                     // postId를 사용하여 게시물의 세부 정보를 가져오는 함수
                     function fetchPostDetails(postId) {
-                        fetch(`http://127.0.0.1:8000/api/posts/${postId}/`, {
+                        fetch(`http://43.203.201.118/api/posts/${postId}/`, {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem(
                                     'access'
@@ -476,7 +472,7 @@
                     }
 
                     // 카테고리 목록 가져오기
-                    fetch('http://127.0.0.1:8000/api/posts/categories/', {
+                    fetch('http://43.203.201.118/api/posts/categories/', {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem(
                                 'access'
@@ -550,7 +546,7 @@
                         formData.append('csrfmiddlewaretoken', csrftoken);
 
                         fetch(
-                            `http://127.0.0.1:8000/api/posts/${postId}/update/`,
+                            `http://43.203.201.118/api/posts/${postId}/update/`,
                             {
                                 method: 'PATCH',
                                 headers: {

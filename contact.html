@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Logis Bootstrap Template - Contact</title>
         <meta content="" name="description" />
@@ -253,14 +249,9 @@
                             href="index.html"
                             class="logo d-flex align-items-center"
                         >
-                            <span>Logis</span>
+                            <span>IF </span>
                         </a>
-                        <p>
-                            Cras fermentum odio eu feugiat lide par naso tierra.
-                            Justo eget nada terra videa magna derita valies
-                            darta donna mare fermentum iaculis eu non diam
-                            phasellus.
-                        </p>
+                        <p>물류 혁신을 위한 AI 첨단 기술 기업</p>
                         <div class="social-links d-flex mt-4">
                             <a href="#" class="twitter"
                                 ><i class="bi bi-twitter"></i
@@ -291,11 +282,15 @@
                     <div class="col-lg-2 col-6 footer-links">
                         <h4>Our Services</h4>
                         <ul>
-                            <li><a href="#">Web Design</a></li>
-                            <li><a href="#">Web Development</a></li>
-                            <li><a href="#">Product Management</a></li>
-                            <li><a href="#">Marketing</a></li>
-                            <li><a href="#">Graphic Design</a></li>
+                            <li><a href="#">AI 기반 재고 예측 솔루션 </a></li>
+                            <li><a href="#">수요 데이터 분석 및 최적화 </a></li>
+                            <li>
+                                <a href="#">물류 프로세스 자동화 시스템 </a>
+                            </li>
+                            <li>
+                                <a href="#">AI 플랫폼 통합 및 구축 컨설팅</a>
+                            </li>
+                            <li><a href="#">물류 블로그</a></li>
                         </ul>
                     </div>
 
@@ -317,7 +312,7 @@
 
             <div class="container mt-4">
                 <div class="copyright">
-                    &copy; Copyright <strong><span>Logis</span></strong
+                    &copy; Copyright <strong><span>IF</span></strong
                     >. All Rights Reserved
                 </div>
                 <div class="credits">
@@ -378,11 +373,14 @@
                         localStorage.getItem('access', newToken);
 
                         // 사용자 이름 가져오기
-                        fetch('http://127.0.0.1:8000/api/accounts/profile/', {
-                            headers: {
-                                Authorization: `Bearer ${newToken}`,
-                            },
-                        })
+                        fetch(
+                            'http://43.203.201.118:8000/api/accounts/profile/',
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${newToken}`,
+                                },
+                            }
+                        )
                             .then((response) => response.json())
                             .then((userData) => {
                                 if (userNameDisplayEl) {
@@ -418,6 +416,7 @@
                 profileLinkEl.addEventListener('click', () => {
                     location.href = 'profile.html';
                 });
+                loginBtnEl.style.display = 'none';
             } else {
                 // 로그인 되어 있지 않은 경우
                 if (loginBtnEl) {
@@ -431,6 +430,8 @@
                 if (logoutBtnEl) {
                     logoutBtnEl.style.display = 'none';
                 }
+		const profileLinkEl = document.getElementById('profileLink');
+                profileLinkEl.style.display = 'none';
             }
         });
     </script>

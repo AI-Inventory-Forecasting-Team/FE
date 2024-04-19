@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Login Form</title>
         <meta content="" name="description" />
@@ -361,7 +357,7 @@
 
                 if (isAuthenticated) {
                     // 토큰 갱신
-                    fetch('http://127.0.0.1:8000/api/token/refresh/', {
+                    fetch('http://43.203.201.118/api/token/refresh/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -377,7 +373,7 @@
 
                             // 사용자 이름 가져오기
                             fetch(
-                                'http://127.0.0.1:8000/api/accounts/profile/',
+                                'http://43.203.201.118/api/accounts/profile/',
                                 {
                                     headers: {
                                         Authorization: `Bearer ${newToken}`,
@@ -420,7 +416,7 @@
 
                                 try {
                                     const response = await fetch(
-                                        'http://127.0.0.1:8000/api/posts/categories/',
+                                        'http://43.203.201.118/api/posts/categories/',
                                         {
                                             method: 'GET',
                                             headers: {
@@ -517,7 +513,7 @@
 
                                     try {
                                         const response = await fetch(
-                                            'http://127.0.0.1:8000/api/posts/create/',
+                                            'http://43.203.201.118/api/posts/create/',
                                             {
                                                 method: 'POST',
                                                 headers: {

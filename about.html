@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Logis Bootstrap Template - About</title>
         <meta content="" name="description" />
@@ -890,7 +886,7 @@
                         localStorage.getItem('access', newToken);
 
                         // 사용자 이름 가져오기
-                        fetch('http://127.0.0.1:8000/api/accounts/profile/', {
+                        fetch('http://43.203.201.118/api/accounts/profile/', {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                             },

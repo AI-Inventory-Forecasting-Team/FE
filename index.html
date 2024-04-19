@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Logis Bootstrap Template - Index</title>
         <meta content="" name="description" />
@@ -184,7 +180,7 @@
                                 id="searchInput"
                                 type="text"
                                 class="form-control"
-                                placeholder="우편번호 또는 도시"
+                                placeholder="검색어를 입력하세요"
                             />
                             <button
                                 id="searchButton"
@@ -1397,7 +1393,7 @@
         <div id="preloader"></div>
         <div id="chat-container">
             <div id="file-uploader">
-                <input type="file" id="fileUploader" accept=".xlsx, .xls"/>
+                <input type="file" id="fileUploader" accept=".xlsx, .xls" />
                 <button onclick="loadExcel()">엑셀 파일 불러오기</button>
             </div>
             <div id="chat-messages"></div>
@@ -1431,7 +1427,7 @@
 
             if (isAuthenticated) {
                 // 토큰 갱신
-                fetch('http://127.0.0.1:8000/api/token/refresh/', {
+                fetch('http://43.203.201.118/api/token/refresh/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1446,7 +1442,7 @@
                         localStorage.getItem('access', newToken);
 
                         // 사용자 이름 가져오기
-                        fetch('http://127.0.0.1:8000/api/accounts/profile/', {
+                        fetch('http://43.203.201.118/api/accounts/profile/', {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                             },
@@ -1491,7 +1487,7 @@
                         // 여기에서 직접 `localStorage`에서 `access` 토큰을 가져옵니다.
                         const accessToken = localStorage.getItem('access');
                         fetch(
-                            `http://127.0.0.1:8000/api/posts/list/?search=${searchQuery}`,
+                            `http://43.203.201.118/api/posts/list/?search=${searchQuery}`,
                             {
                                 method: 'GET', // HTTP 요청 메소드
                                 headers: {

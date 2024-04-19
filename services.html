@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Logis Bootstrap Template - Services</title>
         <meta content="" name="description" />
@@ -885,7 +881,7 @@
 
             if (isAuthenticated) {
                 // 토큰 갱신
-                fetch('http://127.0.0.1:8000/api/token/refresh/', {
+                fetch('http://43.203.201.118/api/token/refresh/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -900,7 +896,7 @@
                         localStorage.getItem('access', newToken);
 
                         // 사용자 이름 가져오기
-                        fetch('http://127.0.0.1:8000/api/accounts/profile/', {
+                        fetch('http://43.203.201.118/api/accounts/profile/', {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                             },
@@ -970,7 +966,7 @@
 
             function fetchPosts(page = 1) {
                 currentPage = page;
-                fetch(`http://127.0.0.1:8000/api/posts/list/?page=${page}`, {
+                fetch(`http://43.203.201.118/api/posts/list/?page=${page}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem(
                             'access'

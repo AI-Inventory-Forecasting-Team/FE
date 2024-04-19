@@ -3,10 +3,6 @@
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-        />
 
         <title>Logis Bootstrap Template - Service Details</title>
         <meta content="" name="description" />
@@ -362,7 +358,7 @@
 
             if (isAuthenticated) {
                 // 토큰 갱신
-                fetch('http://127.0.0.1:8000/api/token/refresh/', {
+                fetch('http://43.203.201.118/api/token/refresh/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -377,7 +373,7 @@
                         localStorage.getItem('access', newToken);
 
                         // 사용자 이름 가져오기
-                        fetch('http://127.0.0.1:8000/api/accounts/profile/', {
+                        fetch('http://43.203.201.118/api/accounts/profile/', {
                             headers: {
                                 Authorization: `Bearer ${newToken}`,
                             },
@@ -423,7 +419,7 @@
                 }
                 // postId를 사용하여 게시물의 세부 정보를 가져오는 함수
                 function fetchPostDetails(postId) {
-                    fetch(`http://127.0.0.1:8000/api/posts/${postId}/`, {
+                    fetch(`http://43.203.201.118/api/posts/${postId}/`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem(
                                 'access'
@@ -435,6 +431,7 @@
                             fillPostDetails(data);
                             updateLikeStatus(data.isLiked);
                             updateLikeCount(data.likesCount);
+                            fetchComments(postId);
                         })
                         .catch((error) => {
                             console.error(
@@ -507,7 +504,7 @@
 
                 // 게시물 좋아요 함수
                 function likePost(postId) {
-                    fetch(`http://127.0.0.1:8000/api/posts/${postId}/like/`, {
+                    fetch(`http://43.203.201.118/api/posts/${postId}/like/`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -540,7 +537,7 @@
 
                 // 게시물 좋아요 취소 함수
                 function unlikePost(postId) {
-                    fetch(`http://127.0.0.1:8000/api/posts/${postId}/unlike/`, {
+                    fetch(`http://43.203.201.118/api/posts/${postId}/unlike/`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -621,7 +618,7 @@
                 // 게시물 북마크 함수
                 function bookmarkPost(postId) {
                     const accessToken = localStorage.getItem('access');
-                    fetch(`http://127.0.0.1:8000/api/posts/bookmarks/create/`, {
+                    fetch(`http://43.203.201.118/api/posts/bookmarks/create/`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -651,7 +648,7 @@
                     const bookmarkId = localStorage.getItem('bookmarkId'); // 로컬 스토리지에서 북마크 ID 가져오기
 
                     fetch(
-                        `http://127.0.0.1:8000/api/posts/bookmarks/${bookmarkId}/`,
+                        `http://43.203.201.118/api/posts/bookmarks/${bookmarkId}/`,
                         {
                             method: 'DELETE',
                             headers: {
@@ -693,7 +690,7 @@
                     };
 
                     fetch(
-                        `http://127.0.0.1:8000/api/posts/${postId}/comments/create/`,
+                        `http://43.203.201.118/api/posts/${postId}/comments/create/`,
                         {
                             method: 'POST',
                             headers: {
@@ -715,10 +712,11 @@
                             // 오류 처리 코드를 추가해야 합니다.
                         });
                 }
+
                 // 댓글 조회 함수
                 function fetchComments(postId) {
                     fetch(
-                        `http://127.0.0.1:8000/api/posts/${postId}/comments/`,
+                        `http://43.203.201.118/api/posts/${postId}/comments/`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem(
@@ -733,28 +731,138 @@
                                 document.getElementById('commentsList');
                             commentsListEl.innerHTML = ''; // 기존 댓글 목록 초기화
 
-                            // data.results를 사용하여 댓글 배열에 접근
-                            if (data.results && Array.isArray(data.results)) {
+                            if (Array.isArray(data.results)) {
                                 data.results.forEach((comment) => {
                                     const commentEl =
                                         document.createElement('div');
-                                    const defaultAvatarUrl =
-                                        'https://picsum.photos/50/50'; // 대체 이미지 URL 예시
-                                    const avatarUrl =
-                                        comment.get_avatar_url ||
-                                        defaultAvatarUrl;
-                                    commentEl.innerHTML = `
-                                        <div>
-                                        <img src="${avatarUrl}" alt="Avatar" class="rounded-circle" width="50" height="50">
-                                        <strong>${
-                                            comment.author_username
-                                        }</strong>
-                                        <span>${new Date(
-                                            comment.created_at
-                                        ).toLocaleString()}</span>
-                                        <p>${comment.content}</p>
-                                    </div>
+                                    commentEl.style.marginBottom = '10px';
+
+                                    const commentHeaderEl =
+                                        document.createElement('div');
+                                    commentHeaderEl.style.display = 'flex';
+                                    commentHeaderEl.style.justifyContent =
+                                        'space-between';
+                                    commentHeaderEl.style.alignItems = 'center';
+
+                                    const commentInfoEl =
+                                        document.createElement('div');
+                                    commentInfoEl.style.display = 'flex';
+                                    commentInfoEl.style.alignItems = 'center';
+
+                                    const avatarEl =
+                                        document.createElement('img');
+                                    avatarEl.src =
+                                        comment.author_avatar ||
+                                        'https://picsum.photos/50/50';
+                                    avatarEl.alt = 'Avatar';
+                                    avatarEl.style.width = '30px';
+                                    avatarEl.style.height = '30px';
+                                    avatarEl.style.borderRadius = '50%';
+                                    avatarEl.style.marginRight = '5px';
+
+                                    const authorEl =
+                                        document.createElement('strong');
+                                    authorEl.textContent =
+                                        comment.author_username;
+
+                                    const dateEl =
+                                        document.createElement('span');
+                                    dateEl.textContent = new Date(
+                                        comment.created_at
+                                    ).toLocaleString();
+                                    dateEl.style.marginLeft = '10px';
+                                    dateEl.style.fontSize = '12px';
+                                    dateEl.style.color = 'gray';
+
+                                    commentInfoEl.appendChild(avatarEl);
+                                    commentInfoEl.appendChild(authorEl);
+                                    commentInfoEl.appendChild(dateEl);
+
+                                    commentHeaderEl.appendChild(commentInfoEl);
+
+                                    if (
+                                        comment.author_username ===
+                                        userNameDisplayEl.textContent
+                                    ) {
+                                        const btnContainer =
+                                            document.createElement('div');
+
+                                        const editBtn =
+                                            document.createElement('button');
+                                        editBtn.textContent = '수정';
+                                        editBtn.style.marginLeft = '5px';
+                                        editBtn.addEventListener(
+                                            'click',
+                                            () => {
+                                                const postId =
+                                                    getPostIdFromUrl();
+                                                editComment(comment.id, postId);
+                                            }
+                                        );
+
+                                        const deleteBtn =
+                                            document.createElement('button');
+                                        deleteBtn.textContent = '삭제';
+                                        deleteBtn.style.marginLeft = '5px';
+                                        deleteBtn.addEventListener(
+                                            'click',
+                                            () => {
+                                                deleteComment(comment.id);
+                                            }
+                                        );
+
+                                        btnContainer.appendChild(editBtn);
+                                        btnContainer.appendChild(deleteBtn);
+                                        commentHeaderEl.appendChild(
+                                            btnContainer
+                                        );
+                                    }
+
+                                    const contentEl =
+                                        document.createElement('p');
+                                    contentEl.textContent = comment.content;
+
+                                    commentEl.appendChild(commentHeaderEl);
+                                    commentEl.appendChild(contentEl);
+
+                                    // 대댓글 작성 버튼 생성
+                                    const replyButtonEl =
+                                        document.createElement('button');
+                                    replyButtonEl.textContent = '대댓글 작성';
+                                    replyButtonEl.className =
+                                        'btn btn-outline-primary btn-sm';
+                                    replyButtonEl.addEventListener(
+                                        'click',
+                                        () => {
+                                            toggleReplyForm(comment.id);
+                                        }
+                                    );
+
+                                    // 대댓글 작성 폼 생성
+                                    const replyFormEl =
+                                        document.createElement('div');
+                                    replyFormEl.id = `replyForm-${comment.id}`;
+                                    replyFormEl.className = 'my-3';
+                                    replyFormEl.style.display = 'none';
+                                    replyFormEl.innerHTML = `
+                                        <form class="replyForm">
+                                        <div class="form-group">
+                                            <textarea class="form-control replyContent" rows="3" placeholder="대댓글을 입력하세요." style="resize: none;"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm float-end mt-2">작성하기</button>
+                                        </form>
                                     `;
+
+                                    // 대댓글 목록 생성
+                                    const repliesListEl =
+                                        document.createElement('div');
+                                    repliesListEl.id = `repliesList-${comment.id}`;
+
+                                    commentEl.appendChild(replyButtonEl);
+                                    commentEl.appendChild(replyFormEl);
+                                    commentEl.appendChild(repliesListEl);
+                                    // 대댓글 조회 및 렌더링
+                                    fetchReplies(comment.id, commentEl);
                                     commentsListEl.appendChild(commentEl);
                                 });
                             } else {
@@ -768,6 +876,383 @@
                             console.error('댓글 조회 실패:', error);
                         });
                 }
+
+                // 댓글 수정 함수
+                function editComment(commentId, postId) {
+                    const newContent = prompt('댓글을 수정하세요:');
+                    console.log(newContent);
+                    if (newContent) {
+                        fetch(
+                            `http://43.203.201.118/api/posts/${postId}/comments/${commentId}/`,
+                            {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${localStorage.getItem(
+                                        'access'
+                                    )}`,
+                                },
+                                body: JSON.stringify({
+                                    post: postId,
+                                    content: newContent,
+                                }),
+                            }
+                        )
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log('댓글 수정 성공:', data);
+                                fetchComments(postId); // 댓글 목록 새로고침
+                            })
+                            .catch((error) => {
+                                console.error('댓글 수정 실패:', error);
+                            });
+                    }
+                }
+
+                // 댓글 삭제 함수
+                function deleteComment(commentId) {
+                    if (confirm('댓글을 삭제하시겠습니까?')) {
+                        fetch(
+                            `http://43.203.201.118/api/posts/${postId}/comments/${commentId}/`,
+                            {
+                                method: 'DELETE',
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem(
+                                        'access'
+                                    )}`,
+                                },
+                            }
+                        )
+                            .then((response) => {
+                                if (response.ok) {
+                                    console.log('댓글 삭제 성공');
+                                    fetchComments(getPostIdFromUrl()); // 댓글 목록 새로고침
+                                } else {
+                                    console.error('댓글 삭제 실패');
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('댓글 삭제 실패:', error);
+                            });
+                    }
+                }
+                // 댓글 작성 폼 제출 이벤트 리스너
+                commentFormEl.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const postId = getPostIdFromUrl();
+                    const commentContent = commentTextareaEl.value.trim();
+
+                    if (isAuthenticated && postId && commentContent) {
+                        createComment(postId, commentContent);
+                        commentTextareaEl.value = ''; // 댓글 작성 후 textarea 초기화
+                    } else {
+                        alert('내용을 입력해주세요');
+                        location.href = 'service-details.html';
+                    }
+                });
+                // 대댓글 작성 폼 토글 함수
+                function toggleReplyForm(commentId) {
+                    const replyFormEl = document.getElementById(
+                        `replyForm-${commentId}`
+                    );
+                    if (replyFormEl.style.display === 'none') {
+                        replyFormEl.style.display = 'block';
+                        replyFormEl.setAttribute('data-comment-id', commentId);
+                        replyFormEl.setAttribute('data-post-id', postId);
+
+                        // 대댓글 작성 폼에 이벤트 리스너 추가
+                        const replyForm =
+                            replyFormEl.querySelector('.replyForm');
+                        replyForm.addEventListener('submit', (event) => {
+                            event.preventDefault();
+                            const replyContent = replyForm
+                                .querySelector('.replyContent')
+                                .value.trim();
+                            if (replyContent) {
+                                createReply(commentId, replyContent);
+                                replyForm.querySelector('.replyContent').value =
+                                    ''; // 대댓글 작성 후 textarea 초기화
+                            }
+                        });
+                    } else {
+                        replyFormEl.style.display = 'none';
+                    }
+                }
+
+                // 대댓글 작성 함수
+                function createReply(commentId, content) {
+                    const requestBody = {
+                        comment: commentId,
+                        content: content,
+                    };
+
+                    fetch(
+                        `http://43.203.201.118/api/posts/${postId}/comments/${commentId}/replies/create/`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${localStorage.getItem(
+                                    'access'
+                                )}`,
+                            },
+                            body: JSON.stringify(requestBody),
+                        }
+                    )
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log('대댓글 작성 성공:', data);
+                            fetchReplies(commentId); // 대댓글 목록 새로고침
+                        })
+                        .catch((error) => {
+                            console.error('대댓글 작성 실패:', error);
+                            // 오류 처리 코드를 추가해야 합니다.
+                        });
+                }
+
+                // 대댓글 조회 함수
+                function fetchReplies(commentId) {
+                    fetch(
+                        `http://43.203.201.118/api/posts/${postId}/comments/${commentId}/replies/`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem(
+                                    'access'
+                                )}`,
+                            },
+                        }
+                    )
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const repliesListEl = document.getElementById(
+                                `repliesList-${commentId}`
+                            );
+                            repliesListEl.innerHTML = ''; // 기존 대댓글 목록 초기화
+
+                            if (Array.isArray(data.results)) {
+                                data.results.forEach((reply) => {
+                                    const replyEl =
+                                        document.createElement('div');
+                                    replyEl.style.paddingLeft = '30px';
+                                    replyEl.style.borderLeft =
+                                        '2px solid lightgray';
+                                    replyEl.style.marginBottom = '10px';
+
+                                    const replyHeaderEl =
+                                        document.createElement('div');
+                                    replyHeaderEl.style.display = 'flex';
+                                    replyHeaderEl.style.justifyContent =
+                                        'space-between';
+                                    replyHeaderEl.style.alignItems = 'center';
+
+                                    const replyInfoEl =
+                                        document.createElement('div');
+                                    replyInfoEl.style.display = 'flex';
+                                    replyInfoEl.style.alignItems = 'center';
+
+                                    const avatarEl =
+                                        document.createElement('img');
+                                    avatarEl.src =
+                                        reply.author_avatar ||
+                                        'https://picsum.photos/50/50';
+                                    avatarEl.alt = 'Avatar';
+                                    avatarEl.style.width = '30px';
+                                    avatarEl.style.height = '30px';
+                                    avatarEl.style.borderRadius = '50%';
+                                    avatarEl.style.marginRight = '5px';
+
+                                    const authorEl =
+                                        document.createElement('strong');
+                                    authorEl.textContent =
+                                        reply.author_username;
+
+                                    const dateEl =
+                                        document.createElement('span');
+                                    dateEl.textContent = new Date(
+                                        reply.created_at
+                                    ).toLocaleString();
+                                    dateEl.style.marginLeft = '10px';
+                                    dateEl.style.fontSize = '12px';
+                                    dateEl.style.color = 'gray';
+
+                                    replyInfoEl.appendChild(avatarEl);
+                                    replyInfoEl.appendChild(authorEl);
+                                    replyInfoEl.appendChild(dateEl);
+
+                                    replyHeaderEl.appendChild(replyInfoEl);
+
+                                    if (
+                                        reply.author_username ===
+                                        userNameDisplayEl.textContent
+                                    ) {
+                                        const btnContainer =
+                                            document.createElement('div');
+
+                                        const editBtn =
+                                            document.createElement('button');
+                                        editBtn.textContent = '수정';
+                                        editBtn.style.marginLeft = '5px';
+                                        editBtn.style.backgroundColor = 'white';
+                                        editBtn.style.color = 'black';
+                                        editBtn.style.border = '1px solid #ccc';
+                                        editBtn.style.padding = '3px 10px';
+                                        editBtn.style.borderRadius = '4px';
+                                        editBtn.style.cursor = 'pointer';
+                                        editBtn.style.fontSize = '14px';
+                                        editBtn.addEventListener(
+                                            'click',
+                                            () => {
+                                                editReply(reply.id);
+                                            }
+                                        );
+
+                                        const deleteBtn =
+                                            document.createElement('button');
+                                        deleteBtn.textContent = '삭제';
+                                        deleteBtn.style.marginLeft = '5px';
+                                        deleteBtn.style.backgroundColor =
+                                            'white';
+                                        deleteBtn.style.color = 'black';
+                                        deleteBtn.style.border =
+                                            '1px solid #ccc';
+                                        deleteBtn.style.padding = '3px 10px';
+                                        deleteBtn.style.borderRadius = '4px';
+                                        deleteBtn.style.cursor = 'pointer';
+                                        deleteBtn.style.fontSize = '14px';
+                                        deleteBtn.addEventListener(
+                                            'click',
+                                            () => {
+                                                deleteReply(reply.id);
+                                            }
+                                        );
+
+                                        btnContainer.appendChild(editBtn);
+                                        btnContainer.appendChild(deleteBtn);
+                                        replyHeaderEl.appendChild(btnContainer);
+                                    }
+
+                                    const contentEl =
+                                        document.createElement('p');
+                                    contentEl.textContent = reply.content;
+
+                                    replyEl.appendChild(replyHeaderEl);
+                                    replyEl.appendChild(contentEl);
+
+                                    repliesListEl.appendChild(replyEl);
+                                });
+                            } else {
+                                console.error(
+                                    '대댓글 데이터가 배열 형태가 아닙니다:',
+                                    data
+                                );
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('대댓글 조회 실패:', error);
+                        });
+                }
+
+                // 대댓글 수정 함수
+                function editReply(replyId) {
+                    const newContent = prompt('대댓글을 수정하세요:');
+                    if (newContent) {
+                        fetch(
+                            `http://43.203.201.118/api/posts/${postId}/comments/replies/${replyId}/`,
+                            {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${localStorage.getItem(
+                                        'access'
+                                    )}`,
+                                },
+                                body: JSON.stringify({
+                                    comment: replyId,
+                                    content: newContent,
+                                }),
+                            }
+                        )
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(
+                                        'Network response was not ok'
+                                    );
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                console.log('대댓글 수정 성공:', data);
+                                // fetchReplies(data.comment); // 대댓글 목록 새로고침
+                                // 수정된 대댓글 내용을 반영
+                                const replyEl =
+                                    document.getElementById(repliesListEl);
+                                if (replyEl) {
+                                    const contentEl =
+                                        replyEl.querySelector('p');
+                                    if (contentEl) {
+                                        contentEl.textContent = data.content;
+                                    }
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('대댓글 수정 실패:', error);
+                            });
+                    }
+                }
+
+                // 대댓글 삭제 함수
+                function deleteReply(replyId) {
+                    if (confirm('대댓글을 삭제하시겠습니까?')) {
+                        fetch(
+                            `http://43.203.201.118/api/posts/${postId}/comments/replies/${replyId}/`,
+                            {
+                                method: 'DELETE',
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem(
+                                        'access'
+                                    )}`,
+                                },
+                            }
+                        )
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(
+                                        'Network response was not ok'
+                                    );
+                                }
+                                console.log('대댓글 삭제 성공');
+                                fetchComments(getPostIdFromUrl()); // 대댓글 목록 새로고침
+                            })
+                            .catch((error) => {
+                                console.error('대댓글 삭제 실패:', error);
+                            });
+                    }
+                }
+                // 게시물 삭제 함수
+                function deletePost(postId) {
+                    fetch(`http://43.203.201.118/api/posts/${postId}/delete/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${localStorage.getItem(
+                                'access'
+                            )}`,
+                        },
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                alert('게시물이 삭제되었습니다.');
+                                location.href = 'services.html';
+                            } else {
+                                alert('게시물 삭제에 실패했습니다.');
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('게시물 삭제 중 오류 발생:', error);
+                        });
+                }
+
                 // 댓글 작성 폼 제출 이벤트 리스너
                 commentFormEl.addEventListener('submit', (event) => {
                     event.preventDefault();
@@ -784,7 +1269,7 @@
                 });
                 // 게시물 삭제 함수
                 function deletePost(postId) {
-                    fetch(`http://127.0.0.1:8000/api/posts/${postId}/delete/`, {
+                    fetch(`http://43.203.201.118/api/posts/${postId}/delete/`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
