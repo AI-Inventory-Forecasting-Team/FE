@@ -857,6 +857,7 @@
                                     const repliesListEl =
                                         document.createElement('div');
                                     repliesListEl.id = `repliesList-${comment.id}`;
+                                    repliesListEl.dataset.commentId = comment.id;
 
                                     commentEl.appendChild(replyButtonEl);
                                     commentEl.appendChild(replyFormEl);
@@ -902,6 +903,24 @@
                             .then((data) => {
                                 console.log('댓글 수정 성공:', data);
                                 fetchComments(postId); // 댓글 목록 새로고침
+
+                                const commentId = data.comment; // 대댓글이 속한 댓글의 ID
+                                const repliesListEl = document.querySelector(
+                                    `[data-comment-id="${commentId}"] #repliesList-${commentId}`
+                                );
+                                if (repliesListEl) {
+                                    const replyEl = repliesListEl.querySelector(
+                                        `[data-reply-id="${replyId}"]`
+                                    );
+                                    if (replyEl) {
+                                        const contentEl =
+                                            replyEl.querySelector('p');
+                                        if (contentEl) {
+                                            contentEl.textContent =
+                                                data.content;
+                                        }
+                                    }
+                                }
                             })
                             .catch((error) => {
                                 console.error('댓글 수정 실패:', error);
@@ -1034,6 +1053,8 @@
                                 data.results.forEach((reply) => {
                                     const replyEl =
                                         document.createElement('div');
+                                    replyEl.dataset.commentId = commentId;
+                                    replyEl.dataset.replyId = reply.id;
                                     replyEl.style.paddingLeft = '30px';
                                     replyEl.style.borderLeft =
                                         '2px solid lightgray';
@@ -1157,6 +1178,10 @@
                 function editReply(replyId) {
                     const newContent = prompt('대댓글을 수정하세요:');
                     if (newContent) {
+                        const replyEl = document.querySelector(
+                            `[data-reply-id="${replyId}"]`
+                        );
+                        const commentId = replyEl.dataset.commentId;
                         fetch(
                             `http://43.203.201.118/api/posts/${postId}/comments/replies/${replyId}/`,
                             {
@@ -1168,7 +1193,7 @@
                                     )}`,
                                 },
                                 body: JSON.stringify({
-                                    comment: replyId,
+                                    comment: commentId,
                                     content: newContent,
                                 }),
                             }
@@ -1183,17 +1208,24 @@
                             })
                             .then((data) => {
                                 console.log('대댓글 수정 성공:', data);
-                                // fetchReplies(data.comment); // 대댓글 목록 새로고침
-                                // 수정된 대댓글 내용을 반영
-                                const replyEl =
-                                    document.getElementById(repliesListEl);
-                                if (replyEl) {
-                                    const contentEl =
-                                        replyEl.querySelector('p');
-                                    if (contentEl) {
-                                        contentEl.textContent = data.content;
+                                const commentId = data.comment;
+                                const repliesListEl = document.querySelector(
+                                    `[data-comment-id="${commentId}"] #repliesList-${commentId}`
+                                );
+                                if (repliesListEl) {
+                                    const replyEl = repliesListEl.querySelector(
+                                        `[data-reply-id="${replyId}"]`
+                                    );
+                                    if (replyEl) {
+                                        const contentEl =
+                                            replyEl.querySelector('p');
+                                        if (contentEl) {
+                                            contentEl.textContent =
+                                                data.content;
+                                        }
                                     }
                                 }
+                                fetchReplies(commentId);
                             })
                             .catch((error) => {
                                 console.error('대댓글 수정 실패:', error);
